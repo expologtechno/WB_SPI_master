@@ -1,6 +1,6 @@
 
 #MODULE_PATH=/cygdrive/c/cygwin64/home/ashig/Documents/SPI
-MODULE_PATH=../../../spi_latest
+MODULE_PATH=../../../WB_SPI_master
 
 DUMP_OPTS=DUMP_ON
 
@@ -21,6 +21,7 @@ LOG_DIR=$(MODULE_PATH)/Scratch_area/log
 SIM_DIR=$(MODULE_PATH)/Scratch_area/sim
 TEST_NAME=""
 SIM_OPTS=""
+LOG_NAME=""
 
 INC_DIR=+incdir+$(DUT_DIR) +incdir+$(AGENT_DIR) +incdir+$(AGENT_DIR)/wb_agent +incdir+$(AGENT_DIR)/spi_slave_agent +incdir+$(AGENT_DIR)/reset_agent +incdir+$(TEST_DIR) +incdir+$(SEQ_DIR)  +incdir+$(ENV_DIR)  +incdir+$(TB_DIR) +incdir+$(LOG_DIR) +incdir+$(SIM_DIR)
 
@@ -42,7 +43,7 @@ sim:
 	vsim -c -debugDB +UVM_TESTNAME=$(TEST_NAME) $(SIM_OPTS) -l $(TEST_NAME).log -cvgperinstance -voptargs=+acc -coverage -voptargs="+cover=all" -do "coverage save -onexit $(TEST_NAME).ucdb; do $(SIM_DIR)/wave.do; run -all; exit" work.tb_top
 
 sim_regress:
-	vsim -c -debugDB +UVM_TESTNAME=$(TEST_NAME) -cvgperinstance -voptargs=+acc -coverage -voptargs="+cover=all" $(SIM_OPTS) work.tb_top
+	vsim -c -debugDB +UVM_TESTNAME=$(TEST_NAME) $(SIM_OPTS) -l $(LOG_NAME).log -cvgperinstance -voptargs=+acc -coverage -voptargs="+cover=all" -do "coverage save -onexit $(LOG_NAME).ucdb;run -all; exit"   work.tb_top
 
 
 run: logo_print comp sim
