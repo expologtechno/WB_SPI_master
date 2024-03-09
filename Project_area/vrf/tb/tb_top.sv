@@ -5,6 +5,7 @@
   import uvm_pkg::*;
  
   `include "spi_list.svh"
+  `include "../../rtl/spi_top.v"
 
 module tb_top;
 
