@@ -57,6 +57,15 @@ vsim_gui:
 
 run_gui: logo_print comp vsim_gui
 
+clean:
+	rm -rf work
+	rm vsim.*
+	rm *.log
+	rm *.ucdb
+
+clean_regress:
+	rm -rf spi_regress_*
+
 #run_reg: comp lsb_fst_data_test msb_fst_data_test Rx_raising_Tx_falling_test Rx_falling_Tx_raising_test
 
 #merge:
