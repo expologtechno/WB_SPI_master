@@ -2,7 +2,6 @@
 #MODULE_PATH=/cygdrive/c/cygwin64/home/ashig/Documents/SPI
 MODULE_PATH=../../../spi_latest
 
-SEED=10
 DUMP_OPTS=DUMP_ON
 
 DUT_DIR=$(MODULE_PATH)/Project_area/rtl
@@ -20,6 +19,7 @@ TEST_DIR=$(MODULE_PATH)/Project_area/vrf/tests
 
 LOG_DIR=$(MODULE_PATH)/Scratch_area/log
 SIM_DIR=$(MODULE_PATH)/Scratch_area/sim
+TEST_NAME=""
 SIM_OPTS=""
 
 INC_DIR=+incdir+$(DUT_DIR) +incdir+$(AGENT_DIR) +incdir+$(AGENT_DIR)/wb_agent +incdir+$(AGENT_DIR)/spi_slave_agent +incdir+$(AGENT_DIR)/reset_agent +incdir+$(TEST_DIR) +incdir+$(SEQ_DIR)  +incdir+$(ENV_DIR)  +incdir+$(TB_DIR) +incdir+$(LOG_DIR) +incdir+$(SIM_DIR)
@@ -39,17 +39,25 @@ vsim_example:
 run_example:	comp sim
 
 sim: 
-	vsim -c -debugDB -sv_seed $(SEED) -cvgperinstance -voptargs=+acc -coverage -voptargs="+cover=all" +UVM_VERBOSITY=UVM_MEDIUM $(SIM_OPTS) -do "do $(SIM_DIR)/wave.do; run -all; exit" work.tb_top
+	vsim -c -debugDB +UVM_TESTNAME=$(TEST_NAME) $(SIM_OPTS) -l $(TEST_NAME).log -cvgperinstance -voptargs=+acc -coverage -voptargs="+cover=all" -do "coverage save -onexit $(TEST_NAME).ucdb; do $(SIM_DIR)/wave.do; run -all; exit" work.tb_top
 
-vsim_gui: 
-	vsim -debugDB $(SIM_OPTS) -do "do $(SIM_DIR)/wave.do; run -all; exit" work.tb_top
+sim_regress:
+	vsim -c -debugDB +UVM_TESTNAME=$(TEST_NAME) -cvgperinstance -voptargs=+acc -coverage -voptargs="+cover=all" $(SIM_OPTS) work.tb_top
+
 
 run: logo_print comp sim
 
-run_gui: logo_print comp vsim_gui
+
+run_regress: logo_print comp sim_regress
 
 wave: 
 	vsim -view $(SIM_DIR)/vsim.wlf &
+
+
+vsim_gui: 
+	vsim -debugDB +UVM_TESTNAME=$(TEST_NAME) $(SIM_OPTS) -do "do $(SIM_DIR)/wave.do; run -all; exit" work.tb_top
+
+run_gui: logo_print comp vsim_gui
 
 #run_reg: comp lsb_fst_data_test msb_fst_data_test Rx_raising_Tx_falling_test Rx_falling_Tx_raising_test
 
