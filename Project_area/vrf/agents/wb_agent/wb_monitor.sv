@@ -51,7 +51,7 @@ virtual task run_phase(uvm_phase phase);
 				`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_h.wr_en=%h wb_vif.wb_we_i=%h ",$time,wb_trans_h.wr_en,wb_vif.wb_we_i),UVM_HIGH)
 
 				if(wb_trans_h.wr_en==1)	begin	
-				//	@(posedge wb_vif.clk);
+					@(posedge wb_vif.clk);
 					wb_trans_h.reg_addr    = wb_vif.wb_adr_i;
 					wb_trans_h.reg_wr_data = wb_vif.wb_dat_i;
 	
@@ -99,13 +99,14 @@ virtual task run_phase(uvm_phase phase);
 					wb_trans_h.reg_addr= wb_vif.wb_adr_i;
 							`uvm_info(get_type_name(),$sformatf("*****[%0t] RX3_ADDR  wb_trans_h.reg_addr=%h ",$time,wb_trans_h.reg_addr),UVM_HIGH)
 
-				//	@(posedge wb_vif.clk);
+					@(posedge wb_vif.clk);
 					if(wb_trans_h.reg_addr==`RX0_ADDR) begin
 						data0 = wb_vif.wb_dat_o;
-						`uvm_info(get_type_name(),$sformatf("*****[%0t] data0=%h wb_vif.wb_dat_o=%h ",$time,data0,wb_vif.wb_dat_o),UVM_HIGH)
+						`uvm_info(get_type_name(),$sformatf("*****[%0t] data0=%h wb_vif.wb_dat_o=%h ",$time,data0,wb_vif.wb_dat_o),UVM_MEDIUM)
 						if(cntrl_status_reg[7:0] > 0 && cntrl_status_reg[7:0] <=32) begin
-							`uvm_info(get_type_name(),$sformatf("*****[%0t] RX0_ADDR  cntrl_status_reg=%h ",$time,cntrl_status_reg[7:0]),UVM_HIGH)
+							`uvm_info(get_type_name(),$sformatf("*****[%0t] RX0_ADDR  cntrl_status_reg=%h ",$time,cntrl_status_reg[7:0]),UVM_MEDIUM)
 							wb_trans_h.mon_rx_data[31:0] = data0;
+						`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_h.mon_rx_data[31:0]=%h ",$time,wb_trans_h.mon_rx_data[31:0]),UVM_MEDIUM)
 							wb_analysis_port.write(wb_trans_h);
 						end
 				//			if(cntrl_status_reg[7:0] > 8 && cntrl_status_reg[7:0] <=16) begin
@@ -127,6 +128,7 @@ virtual task run_phase(uvm_phase phase);
 						if(cntrl_status_reg[7:0] > 32 && cntrl_status_reg[7:0] <=64) begin
 					//		`uvm_info(get_type_name(),$sformatf("*****[%0t] RX1_ADDR  cntrl_status_reg=%h ",$time,cntrl_status_reg[7:0]),UVM_HIGH)
 							wb_trans_h.mon_rx_data[63:0]={data1,data0};
+						`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_h.mon_rx_data[63:0]=%h ",$time,wb_trans_h.mon_rx_data[63:0]),UVM_MEDIUM)
 							wb_analysis_port.write(wb_trans_h);
 						end
 					end

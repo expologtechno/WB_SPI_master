@@ -52,17 +52,20 @@ uvm_tlm_analysis_fifo#(spi_slave_trans) spi_slave_analysis_fifo;
 				
 				if(wb_trans_scb_h.ctrl_reg.ctrl_char_len>0) begin
 				data_mask = {128{1'b1}} >> (128-wb_trans_scb_h.ctrl_reg.ctrl_char_len);
+				
+			//	`uvm_info(get_type_name(),$sformatf("*****[%0t] data_mask=%h",$time,data_mask),UVM_MEDIUM)
 				end
 	
 				else begin
 					data_mask ='h FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF;
+			//	`uvm_info(get_type_name(),$sformatf("*****[%0t] data_mask=%h",$time,data_mask),UVM_MEDIUM)
 				end
 
 	      			wb_trans_scb_h.mon_data = wb_trans_scb_h.mon_data & data_mask;
 	      			wb_trans_scb_h.mon_rx_data = wb_trans_scb_h.mon_rx_data & data_mask;
 				
-				wb_trans_scb_h.mon_data = wb_trans_scb_h.mon_data & data_mask;
-	      			wb_trans_scb_h.mon_rx_data = wb_trans_scb_h.mon_rx_data & data_mask;
+			//	`uvm_info(get_type_name(),$sformatf("*****[%0t]  wb_trans_scb_h.mon_data=%h",$time,wb_trans_scb_h.mon_data),UVM_MEDIUM)
+			//	`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%h",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
 			end
 			
 
