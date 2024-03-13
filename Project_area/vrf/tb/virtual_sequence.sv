@@ -47,6 +47,32 @@ endclass:virtual_sequence
 //  endtask 
 //endclass:virt_reset_seq
 
+/**********************SANITY SEQUENCE************************/
+/********************************************************************/
+class virt_sanity_seq extends virtual_sequence; 
+  `uvm_object_utils(virt_sanity_seq)
+  
+  spi_virtual_sqr v_sqr_h;
+
+  sanity_seq  sanity_seq_h; 
+  
+  extern function new(string name="virt_sanity_seq");
+  extern task body();
+
+endclass
+
+/************** constructor*******************/
+function virt_sanity_seq::new(string name="virt_sanity_seq");
+  super.new(name);
+endfunction	
+
+/****************** body**************************/
+task virt_sanity_seq:: body();
+  super.body();
+  sanity_seq_h=sanity_seq::type_id::create("sanity_seq_h");
+  sanity_seq_h.start(wb_agent_sqr_h);
+ endtask 
+
 /**********************LSB 8 BIT DATA SEQUENCE************************/
 /********************************************************************/
 class virt_lsb_8bit_data_seq extends virtual_sequence; 

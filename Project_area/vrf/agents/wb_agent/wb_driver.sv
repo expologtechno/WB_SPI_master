@@ -48,9 +48,10 @@ rsp = wb_trans::type_id::create("rsp");
 			
 	 	//	@(posedge wb_vif.clk);
 	 	//	@(negedge wb_vif.clk);
-			wait(wb_vif.wb_ack_o==1);
+//`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_vif.wb_ack_o=%0h ",$time,wb_vif.wb_ack_o),UVM_MEDIUM)
+	//		wait(wb_vif.wb_ack_o==1);
 
-//`uvm_info(get_type_name(),$sformatf("*****[%0t] wwb_vif.wb_ack_o=%0h ",$time,wb_vif.wb_ack_o),UVM_MEDIUM)
+//`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_vif.wb_ack_o=%0h ",$time,wb_vif.wb_ack_o),UVM_MEDIUM)
 		
 			@(posedge wb_vif.clk);
 			wb_vif.wb_cyc_i <= 0;
