@@ -80,24 +80,28 @@ task lsb_8bit_data_seq ::body();
 //*************1*************
  		start_item(req);
 		assert(req.randomize()with{req.reg_addr==`TX0_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'hA5A5_AFAF;});
+	//	assert(req.randomize()with{req.reg_addr==`TX0_ADDR;req.wr_en==1'h1;});
 		finish_item(req);
   		 get_response(rsp);
 
 //***************2**********
 	  	start_item(req);
 		assert(req.randomize()with{req.reg_addr==`TX1_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'hCAFE_F00D;});
+	//	assert(req.randomize()with{req.reg_addr==`TX1_ADDR;req.wr_en==1'h1;});
 		finish_item(req);
   		get_response(rsp);
 
 //*************3************
 		start_item(req);
 		assert(req.randomize()with{req.reg_addr==`TX2_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'hDAAD_EAAE;});
+	//	assert(req.randomize()with{req.reg_addr==`TX2_ADDR;req.wr_en==1'h1;});
 		finish_item(req);
  		get_response(rsp);
 
 //**************4***********
 		start_item(req);
 		assert(req.randomize()with{req.reg_addr==`TX3_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'hDEAD_BEAF;});
+	//	assert(req.randomize()with{req.reg_addr==`TX3_ADDR;req.wr_en==1'h1;});
 		finish_item(req);
  		get_response(rsp);
 
@@ -105,14 +109,17 @@ task lsb_8bit_data_seq ::body();
  		start_item(req);
 		assert(req.randomize()with{req.reg_addr==`CTRL_STATUS_ADDR ;req.wr_en==1'h1;});
 
-		if($value$plusargs("CHAR_LEN=%d",req.ctrl_reg.ctrl_char_len))
-	//	req.ctrl_reg.ctrl_char_len=128'h08; 
+		$value$plusargs("CHAR_LEN=%d",req.ctrl_reg.ctrl_char_len);
+	//	req.ctrl_reg.ctrl_char_len=16; 
+		`uvm_info(get_type_name(),$sformatf("*****[%0t]SPI_SEQUENSE*** req.ctrl_reg.ctrl_char_len=%d  ",$time,req.ctrl_reg.ctrl_char_len),UVM_HIGH)
 		req.ctrl_reg.ctrl_res_1=1'h0;      
 		req.ctrl_reg.ctrl_go=1'h1;		
-		if($value$plusargs("RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge))
-		if($value$plusargs("TX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge))
+		$value$plusargs("RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge);
+		$value$plusargs("TX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge);
 	//	req.ctrl_reg.ctrl_rx_negedge=1'h0;	
 	//	req.ctrl_reg.ctrl_tx_negedge=1'h1;
+		`uvm_info(get_type_name(),$sformatf("*****[%0t]SPI_SEQUENSE*** req.ctrl_reg.ctrl_rx_negedge=%d  ",$time,req.ctrl_reg.ctrl_rx_negedge),UVM_HIGH)
+		`uvm_info(get_type_name(),$sformatf("*****[%0t]SPI_SEQUENSE*** req.ctrl_reg.ctrl_tx_negedge=%d  ",$time,req.ctrl_reg.ctrl_tx_negedge),UVM_HIGH)
 	
 		if($test$plusargs("MSB_TEST")) begin
 			req.ctrl_reg.ctrl_lsb=1'h0;

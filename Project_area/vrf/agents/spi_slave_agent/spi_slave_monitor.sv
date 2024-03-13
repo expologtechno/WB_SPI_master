@@ -4,6 +4,9 @@ class spi_slave_mon extends uvm_monitor;
 
   spi_slave_trans   spi_slave_trans_h;
 
+bit rx_neg_mon;
+bit tx_neg_mon;
+
   //virtual interface
   virtual spi_intf      spi_vif;
 
@@ -34,8 +37,8 @@ virtual task run_phase(uvm_phase phase);
 int i=0;
 int counter=0; 
 
-    `uvm_info("SPI_SLAVE_MON","Monitor Run Phase", UVM_LOW)
     	forever
+   // `uvm_info("SPI_SLAVE_MON","Monitor Run Phase started", UVM_LOW)
     	        begin
 	        wait(spi_vif.ss_pad_o==32'hfffffffe);
 	       @(negedge spi_vif.spi_clk) ;
@@ -48,7 +51,35 @@ int counter=0;
 //		`uvm_info(get_type_name(),$sformatf("================[%0t]SPI_MONITOR==============spi_slave_trans_h.miso_wr_data[%0d]=%0h  spi_vif.miso_pad_i=%0h ",$time,i,spi_slave_trans_h.miso_wr_data[i],spi_vif.miso_pad_i),UVM_LOW)
 			i++;
 			counter++;
-			fork
+			fork begin
+				$value$plusargs("RX_NEG=%0d",rx_neg_mon);
+				$value$plusargs("TX_NEG=%0d",tx_neg_mon);
+				`uvm_info(get_type_name(),$sformatf("================[%0t]SPI_MONITOR==============rx_neg_mon=%0h tx_neg_mon=%0h",$time,rx_neg_mon,tx_neg_mon),UVM_HIGH)
+				if(rx_neg_mon==0 && tx_neg_mon==0)begin	
+					@(negedge spi_vif.spi_clk);
+				end
+				
+				else if(rx_neg_mon==0 && tx_neg_mon==1) begin
+					@(posedge spi_vif.spi_clk);
+				end
+				
+				else if(rx_neg_mon==1 && tx_neg_mon==0) begin
+					@(negedge spi_vif.spi_clk);
+				end
+				
+				else if (rx_neg_mon==1 && tx_neg_mon==1) begin
+					@(posedge spi_vif.spi_clk);
+				end
+      	`uvm_info(get_type_name(),$sformatf("*****[%0t]SPI_SLAVE_MONITOR********* rx_neg_mon=%0h tx_neg_mon=%0h ",$time,rx_neg_mon,tx_neg_mon),UVM_HIGH)
+			end
+			
+			begin	
+				wait (spi_vif.ss_pad_o==32'hffffffff);
+			end
+			join_any
+			disable fork;
+
+		/*	fork
 			begin		
 				@(posedge spi_vif.spi_clk);
 			end
@@ -57,6 +88,7 @@ int counter=0;
 			end
 			join_any
 			disable fork;
+		*/
 		end
         	spi_slave_trans_h.frame_size=counter;
 
@@ -66,7 +98,9 @@ int counter=0;
       		spi_slave_analysis_port.write(spi_slave_trans_h); 
 		end
 
+   // `uvm_info("SPI_SLAVE_MON","Monitor Run Phase completed", UVM_LOW)
       endtask:run_phase
+
 endclass:spi_slave_mon
 
 
