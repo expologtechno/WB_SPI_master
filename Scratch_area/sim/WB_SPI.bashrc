@@ -13,7 +13,7 @@ echo "setting project environments"
 #export PROJ_ROOT=$PWD
 
 export CMN_DIR=../../../common
-export PROJ_ROOT=../../../WB_SPI_master
+export PROJ_ROOT=../../../WB_SPI_master2
 export PROJ_AREA=$PROJ_ROOT/Project_area
 export SCRATCH_AREA=$PROJ_ROOT/Scratch_area
 export SIM_DIR=$SCRATCH_AREA/sim
