@@ -1,5 +1,6 @@
 //----List of Include Files--------------------//
  
+  
   `include "spi_define.sv"
   `include "wb_intf.sv"
   `include "spi_intf.sv"
@@ -23,6 +24,7 @@
   `include "spi_slave_agent.sv"
 
   `include "virtual_sequencer.sv"
+ // `include "wb_cov.sv"
 
   // Sequence List
   `include "../seqs/sequence_list.sv"

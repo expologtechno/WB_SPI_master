@@ -15,7 +15,7 @@ task body();
 	begin
 
 	start_item(spi_slave_trans_h);
-	//spi_slave_trans_h.miso_wr_data=$random;
+//	spi_slave_trans_h.miso_wr_data=$random;
 	spi_slave_trans_h.miso_wr_data=128'h1122_3344_5566_7788_99aa_bbcc_ddee_0f0f;
 	spi_slave_trans_h.frame_size=128;
 	  

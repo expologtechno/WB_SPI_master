@@ -6,6 +6,8 @@ class spi_slave_mon extends uvm_monitor;
 
 bit rx_neg_mon;
 bit tx_neg_mon;
+bit[31:0] ss_wr_data;
+bit[31:0] ss_pad_value=32'hfffffffe;
 
   //virtual interface
   virtual spi_intf      spi_vif;
@@ -37,18 +39,26 @@ virtual task run_phase(uvm_phase phase);
 int i=0;
 int counter=0; 
 
-    	forever
-   // `uvm_info("SPI_SLAVE_MON","Monitor Run Phase started", UVM_LOW)
-    	        begin
-	        wait(spi_vif.ss_pad_o==32'hfffffffe);
+    	forever begin
+		$value$plusargs("SS_WR_DATA=%d",ss_wr_data);
+// 	 	`uvm_info(get_type_name(),$sformatf("=== SS ADDR REGISTER  ss_wr_data=%0h ",ss_wr_data),UVM_MEDIUM)
+		if(ss_wr_data==1) begin	
+			ss_pad_value=32'hfffffffe;
+		end
+		else begin
+			ss_pad_value=~(ss_wr_data);
+ 	 		`uvm_info(get_type_name(),$sformatf("=== SS PAD VALUE  ss_pad_value1=%0h ",ss_pad_value),UVM_MEDIUM)
+		end
+	
+	      //  wait(spi_vif.ss_pad_o==32'hfffffffe);
+	        wait(spi_vif.ss_pad_o==ss_pad_value);
 	       @(negedge spi_vif.spi_clk) ;
-	        while (spi_vif.ss_pad_o==32'hfffffffe) begin
+	        while (spi_vif.ss_pad_o==ss_pad_value) begin
        	        	spi_slave_trans_h.mosi_rd_data[i]  = spi_vif.mosi_pad_o;
        			spi_slave_trans_h.miso_wr_data[i]  = spi_vif.miso_pad_i;
 		
-	//	`uvm_info(get_type_name(),$sformatf("================[%0t]SPI_MONITOR============== spi_slave_trans_h.mosi_rd_data[%0d]=%0h spi_vif.mosi_pad_o=%0h ",$time,i,spi_slave_trans_h.mosi_rd_data[i],spi_vif.mosi_pad_o),UVM_LOW)
-	        //@(negedge spi_vif.spi_clk) ;
-//		`uvm_info(get_type_name(),$sformatf("================[%0t]SPI_MONITOR==============spi_slave_trans_h.miso_wr_data[%0d]=%0h  spi_vif.miso_pad_i=%0h ",$time,i,spi_slave_trans_h.miso_wr_data[i],spi_vif.miso_pad_i),UVM_LOW)
+//	`uvm_info(get_type_name(),$sformatf("================[%0t]SPI_MONITOR============== spi_slave_trans_h.mosi_rd_data[%0d]=%0h spi_vif.mosi_pad_o=%0h ",$time,i,spi_slave_trans_h.mosi_rd_data[i],spi_vif.mosi_pad_o),UVM_LOW)
+//	`uvm_info(get_type_name(),$sformatf("================[%0t]SPI_MONITOR==============spi_slave_trans_h.miso_wr_data[%0d]=%0h  spi_vif.miso_pad_i=%0h ",$time,i,spi_slave_trans_h.miso_wr_data[i],spi_vif.miso_pad_i),UVM_LOW)
 			i++;
 			counter++;
 			fork begin

@@ -22,6 +22,7 @@ uvm_tlm_analysis_fifo#(spi_slave_trans) spi_slave_analysis_fifo;
     super.build_phase(phase);
     spi_slave_trans_scb_h  = spi_slave_trans::type_id::create("spi_slave_trans_scb_h",  this);
     wb_trans_scb_h  = wb_trans::type_id::create("wb_trans_scb_h",  this);
+//    wb_agent_cov_h  = wb_agent_cov::type_id::create("wb_agent_cov_h",  this);
 
     wb_analysis_fifo = new("wb_analysis_fifo",this);
     spi_slave_analysis_fifo = new("spi_slave_analysis_fifo",this);

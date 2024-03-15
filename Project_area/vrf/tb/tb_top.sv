@@ -11,6 +11,7 @@ module tb_top;
 
   //Rst and clock declarations
   reg clk, rstn;
+  bit [31:0] divider;
 
   //Interface instantation
   wb_intf   wb_vif(clk,rstn);
@@ -60,6 +61,22 @@ module tb_top;
   initial begin
     run_test();
   end
+
+//CLK FREQ_CHECK
+//initial begin
+always @(posedge wb_vif.clk) begin
+	$value$plusargs("DIVIDER_REG=%d",divider);
+	if(spi_vif.spi_clk==((wb_vif.clk)/((divider+1)*2)))begin
+		$display("spi_vif.spi_clk=%0d wb_vif.clk=%0d divider=%0h",spi_vif.spi_clk,wb_vif.clk,divider);
+		`uvm_info("TB_TOP","TB_TOP CLK_FRQ_CHECKER_IS_PASSED",UVM_MEDIUM)
+	end
+	else begin
+		$display("spi_vif.spi_clk=%0d wb_vif.clk=%0d divider=%0h",spi_vif.spi_clk,wb_vif.clk,divider);
+		`uvm_info("TB_TOP","TB_TOP CLK_FRQ_CHECKER_IS_PASSED",UVM_MEDIUM)
+	end
+end
+//end
+
 
 /*  initial begin
     #10000;

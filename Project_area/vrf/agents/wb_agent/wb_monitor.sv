@@ -17,10 +17,58 @@ bit [31:0] data3;
   //wb transactor
   wb_trans   wb_trans_h;
  // int temp[5];
-  /**********************constructor********************************/
+ 
+//*****coverage**********************
+
+covergroup REQ_CG ;
+
+	//REGISTERS
+	SS_ADDR:            coverpoint wb_trans_h.reg_addr {bins ss_addr_bin={32'h18};}
+	DIVIDER_ADDR:       coverpoint wb_trans_h.reg_addr {bins divider_addr_bin={32'h14};}
+	CONTROL_STATUS_ADDR:coverpoint wb_trans_h.reg_addr {bins cntrl_status_bin={32'h10};}
+	TX0:		    coverpoint wb_trans_h.reg_addr {bins tx0_bin={32'h00};}   
+	TX1:		    coverpoint wb_trans_h.reg_addr {bins tx1_bin={32'h04};}   
+	TX2:		    coverpoint wb_trans_h.reg_addr {bins tx2_bin={32'h08};}   
+	TX3:		    coverpoint wb_trans_h.reg_addr {bins tx3_bin={32'h0C};}   
+	RX0:  		    coverpoint wb_trans_h.reg_addr {bins rx0_bin={32'h00};}   
+	RX1:   		    coverpoint wb_trans_h.reg_addr {bins rx1_bin={32'h04};}   
+	RX2:  		    coverpoint wb_trans_h.reg_addr {bins rx2_bin={32'h08};}   
+	RX3:		    coverpoint wb_trans_h.reg_addr {bins rx3_bin={32'h0c};}   
+
+	//CONTRIL AND STATUS REGISTER[CTRL]
+	CONTROL_STATUS_CHAR_LEN:coverpoint wb_trans_h.ctrl_reg.ctrl_char_len;
+	CONTROL_STATUS_GO_BSY  :coverpoint wb_trans_h.ctrl_reg.ctrl_go;
+	CONTROL_STATUS_RX_NEG  :coverpoint wb_trans_h.ctrl_reg.ctrl_rx_negedge;
+	CONTROL_STATUS_TX_NEG  :coverpoint wb_trans_h.ctrl_reg.ctrl_tx_negedge;
+	CONTROL_STATUS_LSB     :coverpoint wb_trans_h.ctrl_reg.ctrl_lsb;
+	CONTROL_STATUS_IE      :coverpoint wb_trans_h.ctrl_reg.ctrl_ie;
+	CONTROL_STATUS_ASS     :coverpoint wb_trans_h.ctrl_reg.ctrl_ass;
+			
+	//WRITE DATA
+	WR_DATA:	    coverpoint wb_trans_h.reg_wr_data	{bins reg_wr_data={[0:$]};}
+	
+	//CROSS COVERAGE
+	CR_SS_ADDR_WR_DATA            :cross  SS_ADDR,WR_DATA;
+	CR_DIVIDER_ADDR_WR_DATA       :cross  DIVIDER_ADDR,WR_DATA;
+	CR_CONTROL_STATUS_ADDR_WR_DATA:cross  CONTROL_STATUS_ADDR,WR_DATA;
+	CR_TX0_ADDR_WR_DATA	      :cross  TX0,WR_DATA;
+	CR_TX1_ADDR_WR_DATA	      :cross  TX1,WR_DATA;
+	CR_TX2_ADDR_WR_DATA	      :cross  TX2,WR_DATA;
+	CR_TX3_ADDR_WR_DATA	      :cross  TX3,WR_DATA;
+	CR_RX0_ADDR_WR_DATA	      :cross  RX0,WR_DATA;
+	CR_RX1_ADDR_WR_DATA	      :cross  RX1,WR_DATA;
+	CR_RX2_ADDR_WR_DATA	      :cross  RX2,WR_DATA;
+	CR_RX3_ADDR_WR_DATA	      :cross  RX3,WR_DATA;
+
+
+
+ endgroup:REQ_CG
+
+/**********************constructor********************************/
   function new(string name, uvm_component parent);
     super.new(name,parent);
     wb_trans_h=new();
+    REQ_CG=new();
     wb_analysis_port = new("wb_analysis_port", this);
   endfunction 
 
@@ -99,14 +147,20 @@ virtual task run_phase(uvm_phase phase);
 					wb_trans_h.reg_addr= wb_vif.wb_adr_i;
 							`uvm_info(get_type_name(),$sformatf("*****[%0t] RX3_ADDR  wb_trans_h.reg_addr=%h ",$time,wb_trans_h.reg_addr),UVM_HIGH)
 
+				//	@(posedge wb_vif.clk);
 					@(posedge wb_vif.clk);
 					if(wb_trans_h.reg_addr==`RX0_ADDR) begin
 						data0 = wb_vif.wb_dat_o;
-						`uvm_info(get_type_name(),$sformatf("*****[%0t] data0=%h wb_vif.wb_dat_o=%h ",$time,data0,wb_vif.wb_dat_o),UVM_MEDIUM)
+				//		`uvm_info(get_type_name(),$sformatf("*****[%0t] data0=%h wb_vif.wb_dat_o=%h ",$time,data0,wb_vif.wb_dat_o),UVM_MEDIUM)
 						if(cntrl_status_reg[7:0] > 0 && cntrl_status_reg[7:0] <=32) begin
-							`uvm_info(get_type_name(),$sformatf("*****[%0t] RX0_ADDR  cntrl_status_reg=%h ",$time,cntrl_status_reg[7:0]),UVM_MEDIUM)
+							`uvm_info(get_type_name(),$sformatf("*****[%0t] RX0_ADDR  cntrl_status_reg=%h ",$time,cntrl_status_reg[7:0]),UVM_HIGH)
 							wb_trans_h.mon_rx_data[31:0] = data0;
-						`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_h.mon_rx_data[31:0]=%h ",$time,wb_trans_h.mon_rx_data[31:0]),UVM_MEDIUM)
+						
+							{wb_trans_h.ctrl_reg.ctrl_res_2,wb_trans_h.ctrl_reg.ctrl_ass,wb_trans_h.ctrl_reg.ctrl_ie,wb_trans_h.ctrl_reg.ctrl_lsb,wb_trans_h.ctrl_reg.ctrl_tx_negedge,wb_trans_h.ctrl_reg.ctrl_rx_negedge,wb_trans_h.ctrl_reg.ctrl_go,wb_trans_h.ctrl_reg.ctrl_res_1,wb_trans_h.ctrl_reg.ctrl_char_len}=cntrl_status_reg;
+
+						`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_h.reg_addr=%h cntrl_status_reg=%b ",$time,wb_trans_h.reg_addr,cntrl_status_reg[31:0]),UVM_MEDIUM)
+
+						`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_h.mon_rx_data[31:0]=%h ",$time,wb_trans_h.mon_rx_data[31:0]),UVM_HIGH)
 							wb_analysis_port.write(wb_trans_h);
 						end
 				//			if(cntrl_status_reg[7:0] > 8 && cntrl_status_reg[7:0] <=16) begin
@@ -124,11 +178,11 @@ virtual task run_phase(uvm_phase phase);
 			
 					if(wb_trans_h.reg_addr==`RX1_ADDR) begin
 						data1  = wb_vif.wb_dat_o;
-						`uvm_info(get_type_name(),$sformatf("*****[%0t] data1=%h wb_vif.wb_dat_o=%h ",$time,data1,wb_vif.wb_dat_o),UVM_HIGH)
+				//		`uvm_info(get_type_name(),$sformatf("*****[%0t] data1=%h wb_vif.wb_dat_o=%h ",$time,data1,wb_vif.wb_dat_o),UVM_MEDIUM)
 						if(cntrl_status_reg[7:0] > 32 && cntrl_status_reg[7:0] <=64) begin
 					//		`uvm_info(get_type_name(),$sformatf("*****[%0t] RX1_ADDR  cntrl_status_reg=%h ",$time,cntrl_status_reg[7:0]),UVM_HIGH)
 							wb_trans_h.mon_rx_data[63:0]={data1,data0};
-						`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_h.mon_rx_data[63:0]=%h ",$time,wb_trans_h.mon_rx_data[63:0]),UVM_MEDIUM)
+						`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_h.mon_rx_data[63:0]=%h ",$time,wb_trans_h.mon_rx_data[63:0]),UVM_HIGH)
 							wb_analysis_port.write(wb_trans_h);
 						end
 					end
@@ -159,6 +213,10 @@ virtual task run_phase(uvm_phase phase);
 				end 
 //	`uvm_info(get_type_name(),$sformatf("[%0t]=============================================WB_MONITOR_from_dut ======================================= \n %s",$time,wb_trans_h.sprint()),UVM_MEDIUM)
 			end
+
+//**************functional coverage***********
+REQ_CG.sample();
+
 	end
  endtask : run_phase
 
