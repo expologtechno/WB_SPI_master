@@ -30,24 +30,16 @@ task lsb_8bit_data_seq ::body();
 /**********************************************Control_status reg************************************************/
  		start_item(req);
 		assert(req.randomize()with{req.reg_addr==`CTRL_STATUS_ADDR ;req.wr_en==1'h1;});
-		if($value$plusargs("CHAR_LEN=%d",req.ctrl_reg.ctrl_char_len))
+		$value$plusargs("CHAR_LEN=%d",req.ctrl_reg.ctrl_char_len);
 	//	req.ctrl_reg.ctrl_char_len=128'h08; 
 		req.ctrl_reg.ctrl_res_1=1'h0;      
 		req.ctrl_reg.ctrl_go=1'h0;		
 	//	req.ctrl_reg.ctrl_rx_negedge=1'h0;	
 	//	req.ctrl_reg.ctrl_tx_negedge=1'h1;
 		
-		if($value$plusargs("TX_NEG=%d ",req.ctrl_reg.ctrl_tx_negedge)) 
-		if($value$plusargs(" RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge)) 
-		begin
-			req.ctrl_reg.ctrl_rx_negedge=1'h0;	
-			req.ctrl_reg.ctrl_tx_negedge=1'h1;
-		end
-		else begin
-			req.ctrl_reg.ctrl_rx_negedge=1'h1;	
-			req.ctrl_reg.ctrl_tx_negedge=1'h0;
-		end
-	
+		$value$plusargs("TX_NEG=%d ",req.ctrl_reg.ctrl_tx_negedge);
+		$value$plusargs(" RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge);
+			
 		if($test$plusargs("MSB_TEST")) begin
 			req.ctrl_reg.ctrl_lsb=1'h0; 
 		end
@@ -206,44 +198,6 @@ task lsb_8bit_data_seq ::body();
  	 	`uvm_info(get_type_name(),$sformatf("=== RX DATA REGISTER 3 MISMATCHED req.temp_data=%0h rsp.reg_rd_data=%0h",req.temp_data,rsp.reg_rd_data),UVM_MEDIUM)
 */
 /************************************************************************************************************************/
-/**********************************************Control_status reg************************************************/
- 		start_item(req);
-		assert(req.randomize()with{req.reg_addr==`CTRL_STATUS_ADDR ;req.wr_en==1'h1;});
-		req.ctrl_reg.ctrl_char_len=128'h01; 
-		req.ctrl_reg.ctrl_res_1=1'h0;      
-		req.ctrl_reg.ctrl_go=1'h0;		
-	//	req.ctrl_reg.ctrl_rx_negedge=1'h0;	
-	//	req.ctrl_reg.ctrl_tx_negedge=1'h1;
-		
-		if($value$plusargs("TX_NEG=%d ",req.ctrl_reg.ctrl_tx_negedge)) 
-		if($value$plusargs(" RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge)) 
-		begin
-			req.ctrl_reg.ctrl_rx_negedge=1'h0;	
-			req.ctrl_reg.ctrl_tx_negedge=1'h1;
-		end
-		else begin
-			req.ctrl_reg.ctrl_rx_negedge=1'h1;	
-			req.ctrl_reg.ctrl_tx_negedge=1'h0;
-		end
-	
-		if($test$plusargs("MSB_TEST")) begin
-			req.ctrl_reg.ctrl_lsb=1'h0; 
-		end
-		else begin
-			req.ctrl_reg.ctrl_lsb=1'h1;
-		end
-
-		req.ctrl_reg.ctrl_lsb=1'h1;	       
-		req.ctrl_reg.ctrl_ie=1'h0;		  
-		req.ctrl_reg.ctrl_ass=1'h1;	        
-		req.ctrl_reg.ctrl_res_2=32'h00_0000;
- 
-		ctrl={req.ctrl_reg.ctrl_res_2,req.ctrl_reg.ctrl_ass,req.ctrl_reg.ctrl_ie,req.ctrl_reg.ctrl_lsb,req.ctrl_reg.ctrl_tx_negedge,req.ctrl_reg.ctrl_rx_negedge,req.ctrl_reg.ctrl_go,req.ctrl_reg.ctrl_res_1,req.ctrl_reg.ctrl_char_len};
-
-		req.reg_wr_data=ctrl;    //LSB first data
-				
-		finish_item(req);
-   		get_response(rsp);
 
 	end
 endtask

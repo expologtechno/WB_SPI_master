@@ -64,19 +64,13 @@ module tb_top;
 
 //CLK FREQ_CHECK
 //initial begin
-always @(posedge wb_vif.clk) begin
-	$value$plusargs("DIVIDER_REG=%d",divider);
-	if(spi_vif.spi_clk==((wb_vif.clk)/((divider+1)*2)))begin
-		$display("spi_vif.spi_clk=%0d wb_vif.clk=%0d divider=%0h",spi_vif.spi_clk,wb_vif.clk,divider);
-		`uvm_info("TB_TOP","TB_TOP CLK_FRQ_CHECKER_IS_PASSED",UVM_MEDIUM)
-	end
-	else begin
-		$display("spi_vif.spi_clk=%0d wb_vif.clk=%0d divider=%0h",spi_vif.spi_clk,wb_vif.clk,divider);
-		`uvm_info("TB_TOP","TB_TOP CLK_FRQ_CHECKER_IS_PASSED",UVM_MEDIUM)
-	end
-end
-//end
+//property clk_frq_check
+//@(posedge wb_vif.clk) disable iff(rstn) 
+//endproperty
 
+//assert property (clk_frqcheck);
+
+//end
 
 /*  initial begin
     #10000;
