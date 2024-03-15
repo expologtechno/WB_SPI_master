@@ -37,7 +37,7 @@ task run_phase(uvm_phase phase);
 			end
 			else begin
 			ss_pad_value=~(ss_wr_data);
- 	 			`uvm_info(get_type_name(),$sformatf("=== SS PAD VALUE  ss_pad_value1=%0h ",ss_pad_value),UVM_MEDIUM)
+ 	 		//	`uvm_info(get_type_name(),$sformatf("=== SS PAD VALUE  ss_pad_value1=%0h ",ss_pad_value),UVM_MEDIUM)
 			end
 
 	        	//wait(spi_vif.ss_pad_o==32'hfffffffe);

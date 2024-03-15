@@ -21,8 +21,13 @@ task lsb_8bit_data_seq ::body();
 
 /******************************************************Divider register****************************************************/
   		start_item(req);
-		assert(req.randomize()with{req.reg_addr==`DIVIDER_ADDR;req.wr_en==1'h1;});
-		$value$plusargs("DIVIDER_REG=%d",req.reg_wr_data);
+	//	assert(req.randomize()with{req.reg_addr==`DIVIDER_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'h 00000001;});
+		if($value$plusargs("DIVIDER_REG=%d",req.reg_wr_data)) //begin
+		//	req.reg_wr_data=32'h 00000001;
+		//end
+		//else begin
+		//req.reg_wr_data=32'h 0000000f;
+		//end
 	        finish_item(req);
    		get_response(rsp);
 
@@ -30,15 +35,32 @@ task lsb_8bit_data_seq ::body();
 /**********************************************Control_status reg************************************************/
  		start_item(req);
 		assert(req.randomize()with{req.reg_addr==`CTRL_STATUS_ADDR ;req.wr_en==1'h1;});
-		$value$plusargs("CHAR_LEN=%d",req.ctrl_reg.ctrl_char_len);
-	//	req.ctrl_reg.ctrl_char_len=128'h08; 
+		if($value$plusargs("CHAR_LEN=%d",req.ctrl_reg.ctrl_char_len)) 
+		//begin
+		//	((req.ctrl_reg.ctrl_char_len=128'h00) ||(req.ctrl_reg.ctrl_char_len=128'h08)||(req.ctrl_reg.ctrl_char_len=128'h10) || (req.ctrl_reg.ctrl_char_len=128'h20) || (req.ctrl_reg.ctrl_char_len=128'h40) || (req.ctrl_reg.ctrl_char_len=128'h80)); 
+		//end
+		//else begin
+		//	req.ctrl_reg.ctrl_char_len=128'h08; 
+		//end
 		req.ctrl_reg.ctrl_res_1=1'h0;      
 		req.ctrl_reg.ctrl_go=1'h0;		
 	//	req.ctrl_reg.ctrl_rx_negedge=1'h0;	
 	//	req.ctrl_reg.ctrl_tx_negedge=1'h1;
 		
-		$value$plusargs("TX_NEG=%d ",req.ctrl_reg.ctrl_tx_negedge);
-		$value$plusargs(" RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge);
+		if($value$plusargs("TX_NEG=%d ",req.ctrl_reg.ctrl_tx_negedge)) begin
+			req.ctrl_reg.ctrl_tx_negedge=1'h0;
+		end
+		else begin
+			req.ctrl_reg.ctrl_tx_negedge=1'h1;
+		end
+	
+		if($value$plusargs(" RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge)) begin
+			req.ctrl_reg.ctrl_rx_negedge=1'h1;
+		end
+		else begin
+		req.ctrl_reg.ctrl_rx_negedge=1'h0;
+		end
+
 			
 		if($test$plusargs("MSB_TEST")) begin
 			req.ctrl_reg.ctrl_lsb=1'h0; 
@@ -62,7 +84,7 @@ task lsb_8bit_data_seq ::body();
 /******************************Slave Select reg*****************************************************************************/
   		start_item(req);
 		assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;});
-		$value$plusargs("SS_WR_DATA=%d",req.reg_wr_data);
+		if($value$plusargs("SS_WR_DATA=%d",req.reg_wr_data))
 		//assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'h 00000001;});
 		finish_item(req);
   		get_response(rsp);
@@ -105,9 +127,21 @@ task lsb_8bit_data_seq ::body();
 	//	req.ctrl_reg.ctrl_char_len=16; 
 		`uvm_info(get_type_name(),$sformatf("*****[%0t]SPI_SEQUENSE*** req.ctrl_reg.ctrl_char_len=%d  ",$time,req.ctrl_reg.ctrl_char_len),UVM_HIGH)
 		req.ctrl_reg.ctrl_res_1=1'h0;      
-		req.ctrl_reg.ctrl_go=1'h1;		
-		$value$plusargs("RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge);
-		$value$plusargs("TX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge);
+		req.ctrl_reg.ctrl_go=1'h1;
+		
+		if($value$plusargs("TX_NEG=%d ",req.ctrl_reg.ctrl_tx_negedge)) begin
+			req.ctrl_reg.ctrl_tx_negedge=1'h1;
+		end
+		else begin
+			req.ctrl_reg.ctrl_tx_negedge=1'h0;
+		end
+	
+		if($value$plusargs(" RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge)) begin
+			req.ctrl_reg.ctrl_rx_negedge=1'h0;
+		end
+		else begin
+			req.ctrl_reg.ctrl_rx_negedge=1'h1;
+		end
 	//	req.ctrl_reg.ctrl_rx_negedge=1'h0;	
 	//	req.ctrl_reg.ctrl_tx_negedge=1'h1;
 		`uvm_info(get_type_name(),$sformatf("*****[%0t]SPI_SEQUENSE*** req.ctrl_reg.ctrl_rx_negedge=%d  ",$time,req.ctrl_reg.ctrl_rx_negedge),UVM_HIGH)
@@ -143,12 +177,12 @@ task lsb_8bit_data_seq ::body();
   	 	end while (rsp.reg_rd_data[8]!=0);
 
 /******************************Slave Select reg*****************************************************************************/
-  		start_item(req);
-		assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;});
-		$value$plusargs("SS_WR_DATA=%d",req.reg_wr_data);
+  		//start_item(req);
+		//assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;});
+		//$value$plusargs("SS_WR_DATA=%d",req.reg_wr_data);
 		//assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'h 00000001;});
-		finish_item(req);
-  		get_response(rsp);
+		//finish_item(req);
+  		//get_response(rsp);
 
 
 /*******************************************************Data_Dx reg 1 *****************************************1**********/
@@ -198,7 +232,6 @@ task lsb_8bit_data_seq ::body();
  	 	`uvm_info(get_type_name(),$sformatf("=== RX DATA REGISTER 3 MISMATCHED req.temp_data=%0h rsp.reg_rd_data=%0h",req.temp_data,rsp.reg_rd_data),UVM_MEDIUM)
 */
 /************************************************************************************************************************/
-
 	end
 endtask
 

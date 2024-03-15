@@ -68,5 +68,5 @@ endclocking
  modport wb_drv_mp(clocking wb_cb);
  
  modport wb_mon_mp(clocking wb_mon);
-  
+ 
 endinterface:wb_intf

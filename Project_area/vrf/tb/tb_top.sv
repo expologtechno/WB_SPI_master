@@ -62,15 +62,6 @@ module tb_top;
     run_test();
   end
 
-//CLK FREQ_CHECK
-//initial begin
-//property clk_frq_check
-//@(posedge wb_vif.clk) disable iff(rstn) 
-//endproperty
-
-//assert property (clk_frqcheck);
-
-//end
 
 /*  initial begin
     #10000;
