@@ -59,9 +59,9 @@ rsp = wb_trans::type_id::create("rsp");
 		 else
 		begin
 	 		@(posedge wb_vif.clk);
-			wb_vif.wb_adr_i  = wb_trans_h.reg_addr;
-			wb_trans_h.reg_rd_data  = wb_vif.wb_dat_o;
-		//	wb_trans_h.temp_data  = wb_trans_h.reg_rd_data;
+			wb_vif.wb_adr_i  <= wb_trans_h.reg_addr;
+			wb_trans_h.reg_rd_data  <= wb_vif.wb_dat_o;
+			wb_trans_h.temp_data  = wb_trans_h.reg_rd_data;
 		
 		 end
 		 
@@ -71,7 +71,7 @@ rsp = wb_trans::type_id::create("rsp");
 
     		 //end
 		 end
-		`uvm_info(get_type_name(),$sformatf("[%0t]=============================================WB_DRIVER  to dut ======================================= \n %s",$time,wb_trans_h.sprint()),UVM_MEDIUM)
+	//	`uvm_info(get_type_name(),$sformatf("[%0t]=============================================WB_DRIVER  to dut ======================================= \n %s",$time,wb_trans_h.sprint()),UVM_MEDIUM)
 
 // responses [RSP]
 		rsp = wb_trans::type_id::create("rsp");

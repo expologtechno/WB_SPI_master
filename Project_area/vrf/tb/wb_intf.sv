@@ -68,5 +68,20 @@ endclocking
  modport wb_drv_mp(clocking wb_cb);
  
  modport wb_mon_mp(clocking wb_mon);
- 
+
+//=====================================================================
+//Assertions
+//=====================================================================
+//Clock frequency check assertion
+
+time clk_period =10ns;
+   property clk_frq_check(int clk_period);
+    realtime current_time;
+     (('1,current_time=$realtime) |=>(clk_period==$realtime-current_time));
+    endproperty
+
+ASSERT_PERIOD:assert property (@(posedge clk)clk_frq_check(clk_period))
+else
+`uvm_error("TB_CLOCK_CHECK_ASSERTION", "TB clk frquency mismatch ")
+
 endinterface:wb_intf

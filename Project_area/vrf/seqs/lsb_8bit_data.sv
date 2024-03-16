@@ -21,16 +21,9 @@ task lsb_8bit_data_seq ::body();
 
 /******************************************************Divider register****************************************************/
   		start_item(req);
-	//	assert(req.randomize()with{req.reg_addr==`DIVIDER_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'h 00000001;});
-		if($value$plusargs("DIVIDER_REG=%d",req.reg_wr_data)) //begin
-		//	req.reg_wr_data=32'h 00000001;
-		//end
-		//else begin
-		//req.reg_wr_data=32'h 0000000f;
-		//end
+		assert(req.randomize()with{req.reg_addr==`DIVIDER_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'h 00000001;});
 	        finish_item(req);
    		get_response(rsp);
-
 
 /**********************************************Control_status reg************************************************/
  		start_item(req);
@@ -47,14 +40,14 @@ task lsb_8bit_data_seq ::body();
 	//	req.ctrl_reg.ctrl_rx_negedge=1'h0;	
 	//	req.ctrl_reg.ctrl_tx_negedge=1'h1;
 		
-		if($value$plusargs("TX_NEG=%d ",req.ctrl_reg.ctrl_tx_negedge)) begin
+		if($value$plusargs("TX_NEG ",req.ctrl_reg.ctrl_tx_negedge)) begin
 			req.ctrl_reg.ctrl_tx_negedge=1'h0;
 		end
 		else begin
 			req.ctrl_reg.ctrl_tx_negedge=1'h1;
 		end
 	
-		if($value$plusargs(" RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge)) begin
+		if($value$plusargs(" RX_NEG",req.ctrl_reg.ctrl_rx_negedge)) begin
 			req.ctrl_reg.ctrl_rx_negedge=1'h1;
 		end
 		else begin
@@ -129,14 +122,14 @@ task lsb_8bit_data_seq ::body();
 		req.ctrl_reg.ctrl_res_1=1'h0;      
 		req.ctrl_reg.ctrl_go=1'h1;
 		
-		if($value$plusargs("TX_NEG=%d ",req.ctrl_reg.ctrl_tx_negedge)) begin
+		if($value$plusargs("TX_NEG ",req.ctrl_reg.ctrl_tx_negedge)) begin
 			req.ctrl_reg.ctrl_tx_negedge=1'h1;
 		end
 		else begin
 			req.ctrl_reg.ctrl_tx_negedge=1'h0;
 		end
 	
-		if($value$plusargs(" RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge)) begin
+		if($value$plusargs(" RX_NEG",req.ctrl_reg.ctrl_rx_negedge)) begin
 			req.ctrl_reg.ctrl_rx_negedge=1'h0;
 		end
 		else begin
