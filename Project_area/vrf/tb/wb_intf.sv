@@ -84,4 +84,12 @@ ASSERT_PERIOD:assert property (@(posedge clk)clk_frq_check(clk_period))
 else
 `uvm_error("TB_CLOCK_CHECK_ASSERTION", "TB clk frquency mismatch ")
 
+
+//   property sclk_frq_check;
+     
+//	@(posedge clk) 
+//  endproperty
+
+//ASSER_PERIOD:assert property (@(posedge clk) sclk_frq_check)
+
 endinterface:wb_intf
