@@ -69,8 +69,8 @@ task lsb_8bit_data_seq ::body();
 /*******************************************************Data_Tx reg 1 *****************************************1************/
 //*************1*************
  		start_item(req);
-		assert(req.randomize()with{req.reg_addr==`TX0_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'hAF;});
-	//	assert(req.randomize()with{req.reg_addr==`TX0_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'hA5A5_AFAF;});
+	//	assert(req.randomize()with{req.reg_addr==`TX0_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'hAF;});
+		assert(req.randomize()with{req.reg_addr==`TX0_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'hA5A5_AFAF;});
 	//	assert(req.randomize()with{req.reg_addr==`TX0_ADDR;req.wr_en==1'h1;});
 		finish_item(req);
   		 get_response(rsp);

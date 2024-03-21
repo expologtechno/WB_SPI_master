@@ -89,7 +89,7 @@ uvm_tlm_analysis_fifo#(spi_slave_trans) spi_slave_analysis_fifo;
 		//		`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%h",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
 				
 				if(wb_trans_scb_h.ctrl_reg.ctrl_char_len>0) begin
-				data_length= {<<4{spi_slave_trans_scb_h.mosi_rd_data}};
+				data_length= {<<1{spi_slave_trans_scb_h.mosi_rd_data}};
 				$display("data_length=%0h",data_length);
 				data=data_length >> (128-wb_trans_scb_h.ctrl_reg.ctrl_char_len);
 				$display("data=%0h",data);

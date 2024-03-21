@@ -72,12 +72,14 @@ module spi_shift (clk, rst, latch, byte_sel, len, lsb, go,
                               
   reg     [`SPI_CHAR_LEN_BITS:0] cnt;          // data bit count
   reg        [`SPI_MAX_CHAR-1:0] data;         // shift register
+  reg        [`SPI_MAX_CHAR-1:0] data_rx;         // shift register
   wire    [`SPI_CHAR_LEN_BITS:0] tx_bit_pos;   // next bit position
   wire    [`SPI_CHAR_LEN_BITS:0] rx_bit_pos;   // next bit position
   wire                           rx_clk;       // rx clock enable
   wire                           tx_clk;       // tx clock enable
+  reg        [`SPI_MAX_CHAR-1:0] data_rx_mask;         // shift register
   
-  assign p_out = data;
+  assign p_out = data_rx;
   
   assign tx_bit_pos = lsb ? {!(|len), len} - cnt : cnt - {{`SPI_CHAR_LEN_BITS{1'b0}},1'b1};
   assign rx_bit_pos = lsb ? {!(|len), len} - (rx_negedge ? cnt + {{`SPI_CHAR_LEN_BITS{1'b0}},1'b1} : cnt) : 
@@ -114,14 +116,46 @@ module spi_shift (clk, rst, latch, byte_sel, len, lsb, go,
   end
   
   // Sending bits to the line
-  always @(posedge clk or posedge rst)
+  always @(negedge tx_clk or posedge rst or posedge tip)
   begin
-    if (rst)
+    if (rst) begin
       s_out   <= #Tp 1'b0;
-    else
-      s_out <= #Tp (tx_clk ) ? data[tx_bit_pos[`SPI_CHAR_LEN_BITS-1:0]] : s_out;
+      data <= 0;
+    end
+    else begin
+      //s_out <= #Tp (tx_clk ) ? data[tx_bit_pos[`SPI_CHAR_LEN_BITS-1:0]] : s_out;
+      s_out <= lsb ? data[0] : data[len-1];
+      data  <= lsb ? data >> 1 : data << 1;
+    end
   end
   
+  // Receiving bits from the line
+  always @(negedge rx_clk or posedge rst /*or posedge tip*/)
+  begin
+    if (rst) begin
+      data_rx   <= #Tp 1'b0;
+      //data <= 0;
+    end
+    else begin
+      //s_out <= #Tp (tx_clk ) ? data[tx_bit_pos[`SPI_CHAR_LEN_BITS-1:0]] : s_out;
+      //s_out <= lsb ? data[0] : data[len-1];
+      if(lsb) begin
+	      data_rx = data_rx >> 1;
+	      data_rx[len-1] = s_in;
+	      data_rx_mask = {128{1'b1}} >> (128-len);
+	      data_rx = data_rx & data_rx_mask;
+      end
+      else begin
+	      data_rx = data_rx << 1;
+	      data_rx[0] = s_in;
+	      //data_rx = data_rx & {{`SPI_MAX_CHAR-`SPI_CHAR_LEN_BITS{1'b0}},{`SPI_CHAR_LEN_BITS{1'b1}}};
+	      //data_rx = data_rx & { {(128-len){1'b0}}, {len{1'b1}} };
+	      data_rx_mask = {128{1'b1}} >> (128-len);
+	      data_rx = data_rx & data_rx_mask;
+      end
+    end
+  end
+
   // Receiving bits from the line
   always @(posedge clk or posedge rst)
   begin
@@ -230,8 +264,8 @@ module spi_shift (clk, rst, latch, byte_sel, len, lsb, go,
       end
 `endif
 `endif
-    else
-      data[rx_bit_pos[`SPI_CHAR_LEN_BITS-1:0]] <= #Tp rx_clk ? s_in : data[rx_bit_pos[`SPI_CHAR_LEN_BITS-1:0]];
+    //else
+      //data_rx[rx_bit_pos[`SPI_CHAR_LEN_BITS-1:0]] <= #Tp rx_clk ? s_in : data[rx_bit_pos[`SPI_CHAR_LEN_BITS-1:0]];
   end
   
 endmodule
