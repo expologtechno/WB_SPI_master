@@ -38,15 +38,7 @@ task ss_data_seq ::body();
 		
 		if($value$plusargs("TX_NEG=%d ",req.ctrl_reg.ctrl_tx_negedge)) 
 		if($value$plusargs(" RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge)) 
-		begin
-			req.ctrl_reg.ctrl_rx_negedge=1'h0;	
-			req.ctrl_reg.ctrl_tx_negedge=1'h1;
-		end
-		else begin
-			req.ctrl_reg.ctrl_rx_negedge=1'h1;	
-			req.ctrl_reg.ctrl_tx_negedge=1'h0;
-		end
-	
+		
 		if($test$plusargs("MSB_TEST")) begin
 			req.ctrl_reg.ctrl_lsb=1'h0; 
 		end
@@ -118,13 +110,10 @@ task ss_data_seq ::body();
 		`uvm_info(get_type_name(),$sformatf("*****[%0t]SPI_SEQUENSE*** req.ctrl_reg.ctrl_char_len=%d  ",$time,req.ctrl_reg.ctrl_char_len),UVM_HIGH)
 		req.ctrl_reg.ctrl_res_1=1'h0;      
 		req.ctrl_reg.ctrl_go=1'h1;		
-		$value$plusargs("RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge);
-		$value$plusargs("TX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge);
-	//	req.ctrl_reg.ctrl_rx_negedge=1'h0;	
-	//	req.ctrl_reg.ctrl_tx_negedge=1'h1;
-		`uvm_info(get_type_name(),$sformatf("*****[%0t]SPI_SEQUENSE*** req.ctrl_reg.ctrl_rx_negedge=%d  ",$time,req.ctrl_reg.ctrl_rx_negedge),UVM_HIGH)
-		`uvm_info(get_type_name(),$sformatf("*****[%0t]SPI_SEQUENSE*** req.ctrl_reg.ctrl_tx_negedge=%d  ",$time,req.ctrl_reg.ctrl_tx_negedge),UVM_HIGH)
-	
+		
+		req.ctrl_reg.ctrl_rx_negedge=1'h0;	
+		req.ctrl_reg.ctrl_tx_negedge=1'h1;
+		
 		if($test$plusargs("MSB_TEST")) begin
 			req.ctrl_reg.ctrl_lsb=1'h0;
 		end
@@ -169,46 +158,21 @@ task ss_data_seq ::body();
 		finish_item(req);
    		get_response(rsp);
 	
-//COMPARISION OF SEQUENCE REPONSE:
-/*
- if(req.temp_data==rsp.reg_rd_data)
- 	 	`uvm_info(get_type_name(),$sformatf("=== RX DATA REGISTER 0 MATCHED    req.temp_data=%0h rsp.reg_rd_data=%0h",req.temp_data,rsp.reg_rd_data),UVM_MEDIUM)
- else
- 	 	`uvm_info(get_type_name(),$sformatf("=== RX DATA REGISTER 0 MISMATCHED req.temp_data=%0h rsp.reg_rd_data=%0h",req.temp_data,rsp.reg_rd_data),UVM_MEDIUM)
-*/	
 //***************2*********
 		start_item(req);
 		assert(req.randomize()with{req.reg_addr==`RX1_ADDR;req.wr_en==1'h0;});
 		finish_item(req);
   		get_response(rsp);
-//COMPARISION OF SEQUENCE REPONSE:
-/*if(req.temp_data==rsp.reg_rd_data)
- 	 	`uvm_info(get_type_name(),$sformatf("=== RX DATA REGISTER 1 MATCHED    req.temp_data=%0h rsp.reg_rd_data=%0h",req.temp_data,rsp.reg_rd_data),UVM_MEDIUM)
- else
- 	 	`uvm_info(get_type_name(),$sformatf("=== RX DATA REGISTER 1 MISMATCHED req.temp_data=%0h rsp.reg_rd_data=%0h",req.temp_data,rsp.reg_rd_data),UVM_MEDIUM)
-*/
 //***************3************
 		start_item(req);
 		assert(req.randomize()with{req.reg_addr==`RX2_ADDR;req.wr_en==1'h0;});
 		finish_item(req);
  		get_response(rsp);
-//COMPARISION OF SEQUENCE REPONSE:
-/*if(req.temp_data==rsp.reg_rd_data)
- 	 	`uvm_info(get_type_name(),$sformatf("=== RX DATA REGISTER 2 MATCHED    req.temp_data=%0h rsp.reg_rd_data=%0h",req.temp_data,rsp.reg_rd_data),UVM_MEDIUM)
- else
- 	 	`uvm_info(get_type_name(),$sformatf("=== RX DATA REGISTER 2 MISMATCHED req.temp_data=%0h rsp.reg_rd_data=%0h",req.temp_data,rsp.reg_rd_data),UVM_MEDIUM)
-*/
 //*****************4*********
 		start_item(req);
 		assert(req.randomize()with{req.reg_addr==`RX3_ADDR;req.wr_en==1'h0;});
 		finish_item(req);
  		get_response(rsp);
-//COMPARISION OF SEQUENCE REPONSE:
-/*if(req.temp_data==rsp.reg_rd_data)
- 	 	`uvm_info(get_type_name(),$sformatf("=== RX DATA REGISTER 3 MATCHED    req.temp_data=%0h rsp.reg_rd_data=%0h",req.temp_data,rsp.reg_rd_data),UVM_MEDIUM)
- else
- 	 	`uvm_info(get_type_name(),$sformatf("=== RX DATA REGISTER 3 MISMATCHED req.temp_data=%0h rsp.reg_rd_data=%0h",req.temp_data,rsp.reg_rd_data),UVM_MEDIUM)
-*/
 /************************************************************************************************************************/
 	end
 endtask

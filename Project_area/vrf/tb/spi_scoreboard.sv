@@ -4,6 +4,13 @@ class spi_sbd extends uvm_scoreboard;
   virtual wb_intf      wb_vif;
   virtual spi_intf     spi_vif;
 
+bit[127:0] temp;
+//bit[127:0] temp1;
+bit[127:0] data_length;
+bit[127:0] rx_data_length;
+bit[127:0] data;
+bit[127:0] rx_data;
+
   `uvm_component_utils(spi_sbd)
   
   wb_trans	       wb_trans_scb_h;
@@ -45,10 +52,9 @@ uvm_tlm_analysis_fifo#(spi_slave_trans) spi_slave_analysis_fifo;
 
 			begin
 				spi_slave_analysis_fifo.get(spi_slave_trans_scb_h);
-   			//	`uvm_info(get_type_name(),$sformatf("=============================================SPI_SLAVE_TRANS_MONITOR_SCBD ======================================= \n %s",spi_slave_trans_scb_h.sprint()),UVM_MEDIUM)
+   				`uvm_info(get_type_name(),$sformatf("=============================================SPI_SLAVE_TRANS_MONITOR_SCBD ======================================= \n %s",spi_slave_trans_scb_h.sprint()),UVM_MEDIUM)
    			end
         	join
-
 			if($value$plusargs("CHAR_LEN=%d",wb_trans_scb_h.ctrl_reg.ctrl_char_len)) begin
 				
 				if(wb_trans_scb_h.ctrl_reg.ctrl_char_len>0) begin
@@ -62,14 +68,56 @@ uvm_tlm_analysis_fifo#(spi_slave_trans) spi_slave_analysis_fifo;
 			//	`uvm_info(get_type_name(),$sformatf("*****[%0t] data_mask=%h",$time,data_mask),UVM_MEDIUM)
 				end
 
+			//	`uvm_info(get_type_name(),$sformatf("*****[%0t]  wb_trans_scb_h.mon_data=%h",$time,wb_trans_scb_h.mon_data),UVM_MEDIUM)
+			//	`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%h",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
 	      			wb_trans_scb_h.mon_data = wb_trans_scb_h.mon_data & data_mask;
 	      			wb_trans_scb_h.mon_rx_data = wb_trans_scb_h.mon_rx_data & data_mask;
 				
 			//	`uvm_info(get_type_name(),$sformatf("*****[%0t]  wb_trans_scb_h.mon_data=%h",$time,wb_trans_scb_h.mon_data),UVM_MEDIUM)
 			//	`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%h",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
 			end
-			
+			 
+			if($test$plusargs("MSB_TEST")) begin
+				//temp=spi_slave_trans_scb_h.mosi_rd_data;
+				`uvm_info(get_type_name(),$sformatf("*****[%0t] spi_slave_trans_scb_h.mosi_rd_data=%h",$time,spi_slave_trans_scb_h.mosi_rd_data),UVM_MEDIUM)
+		//	       `uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%h",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
+		//		temp=wb_trans_scb_h.mon_rx_data;
+		//		for(int i=0; i<wb_trans_scb_h.ctrl_reg.ctrl_char_len; i++) begin
+		//			wb_trans_scb_h.mon_rx_data[i]=temp[127-i];
+		//		`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%b",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
+		//		end
+		//		`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%h",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
+				
+				if(wb_trans_scb_h.ctrl_reg.ctrl_char_len>0) begin
+				data_length= {<<4{spi_slave_trans_scb_h.mosi_rd_data}};
+				$display("data_length=%0h",data_length);
+				data=data_length >> (128-wb_trans_scb_h.ctrl_reg.ctrl_char_len);
+				$display("data=%0h",data);
+				spi_slave_trans_scb_h.mosi_rd_data=data;
+				end
+				else begin
+				data_length= {<<1{spi_slave_trans_scb_h.mosi_rd_data}};
+				spi_slave_trans_scb_h.mosi_rd_data=data_length;
+				end
 
+				if(wb_trans_scb_h.ctrl_reg.ctrl_char_len>0) begin
+				rx_data_length= {<<1{wb_trans_scb_h.mon_rx_data}};
+				$display("rx_data_length=%0h",rx_data_length);
+				rx_data=rx_data_length >> (128-wb_trans_scb_h.ctrl_reg.ctrl_char_len);
+				$display("rx_data=%0h",rx_data);
+				wb_trans_scb_h.mon_rx_data=rx_data;
+				end
+				else begin
+				rx_data_length= {<<1{wb_trans_scb_h.mon_rx_data}};
+				wb_trans_scb_h.mon_rx_data=rx_data_length;
+				$display("rx_data_length=%0h",rx_data_length);
+				end
+		
+			//	`uvm_info(get_type_name(),$sformatf("*****[%0t] spi_slave_trans_scb_h.mosi_rd_data=%h",$time,spi_slave_trans_scb_h.mosi_rd_data),UVM_MEDIUM)
+			//	`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%h",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
+			end
+			
+			
 	 		if(spi_slave_trans_scb_h.mosi_rd_data==wb_trans_scb_h.mon_data) begin
 				`uvm_info(get_type_name(),$sformatf("*****[%0t] spi_slave_trans_scb_h.mosi_rd_data=%h  wb_trans_scb_h.mon_data=%h",$time,spi_slave_trans_scb_h.mosi_rd_data,wb_trans_scb_h.mon_data),UVM_MEDIUM)
 	  			`uvm_info("SPI_SCOREBOARD","SCOREBOARD_DATA_MATCHED", UVM_LOW)
@@ -77,7 +125,7 @@ uvm_tlm_analysis_fifo#(spi_slave_trans) spi_slave_analysis_fifo;
 
 			else begin
 				`uvm_info(get_type_name(),$sformatf("*****[%0t] spi_slave_trans_scb_h.mosi_rd_data=%h  wb_trans_scb_h.mon_data=%h",$time,spi_slave_trans_scb_h.mosi_rd_data,wb_trans_scb_h.mon_data),UVM_MEDIUM)
-  				`uvm_info("SPI_SCOREBOARD","SCOREBOARD_DATA_MISMATCHED", UVM_LOW)
+  				`uvm_error("SPI_SCOREBOARD","SCOREBOARD_DATA_MISMATCHED")
 			end
 
 			if(spi_slave_trans_scb_h.miso_wr_data==wb_trans_scb_h.mon_rx_data) begin
@@ -87,9 +135,9 @@ uvm_tlm_analysis_fifo#(spi_slave_trans) spi_slave_analysis_fifo;
 
 			else begin
 				`uvm_info(get_type_name(),$sformatf("*****[%0t] spi_slave_trans_scb_h.miso_wr_data=%h  wb_trans_scb_h.mon_rx_data=%h",$time,spi_slave_trans_scb_h.miso_wr_data,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
-  				`uvm_info("SPI_SCOREBOARD","SCOREBOARD_DATA_MISMATCHED", UVM_LOW)
+  				`uvm_error("SPI_SCOREBOARD","SCOREBOARD_DATA_MISMATCHED")
 			end
-
+			
   		end
 //	phase.drop_objection(this);
 

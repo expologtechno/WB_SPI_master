@@ -45,7 +45,7 @@ rsp = wb_trans::type_id::create("rsp");
 		 if(wb_trans_h.wr_en==1) begin	           
 			wb_vif.wb_adr_i <= wb_trans_h.reg_addr;
 			wb_vif.wb_dat_i <= wb_trans_h.reg_wr_data;
-			wb_trans_h.temp_data  <= wb_vif.wb_dat_i;
+		//	wb_trans_h.temp_data  <= wb_vif.wb_dat_i;
 			
 //`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_vif.wb_ack_o=%0h ",$time,wb_vif.wb_ack_o),UVM_MEDIUM)
 	//		wait(wb_vif.wb_ack_o==1);
