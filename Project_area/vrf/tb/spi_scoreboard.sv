@@ -47,42 +47,29 @@ uvm_tlm_analysis_fifo#(spi_slave_trans) spi_slave_analysis_fifo;
 			begin
 				wb_analysis_fifo.get(wb_trans_scb_h);
      		//		`uvm_info(get_type_name(),$sformatf("=============================================WB_TRANS_MONITOR_SCBD ======================================= \n %s",wb_trans_scb_h.sprint()),UVM_MEDIUM)
- 	`uvm_info("SPI_SCOREBOARD","SCOREBOARD_WB_FORK_JOIN_COMPLETED", UVM_LOW)
 			end
 
 			begin
 				spi_slave_analysis_fifo.get(spi_slave_trans_scb_h);
    		//		`uvm_info(get_type_name(),$sformatf("=============================================SPI_SLAVE_TRANS_MONITOR_SCBD ======================================= \n %s",spi_slave_trans_scb_h.sprint()),UVM_MEDIUM)
- 	`uvm_info("SPI_SCOREBOARD","SCOREBOARD_SPI_SLAVE_JOIN_COMPLETED", UVM_LOW)
    			end
         	join
-			if($value$plusargs("CHAR_LEN=%d",wb_trans_scb_h.ctrl_reg.ctrl_char_len)) begin
 				
-				if(wb_trans_scb_h.ctrl_reg.ctrl_char_len>0) begin
-				data_mask = {128{1'b1}} >> (128-wb_trans_scb_h.ctrl_reg.ctrl_char_len);
-				
-			//	`uvm_info(get_type_name(),$sformatf("*****[%0t] data_mask=%h",$time,data_mask),UVM_MEDIUM)
-				end
+		if(wb_trans_scb_h.ctrl_reg.ctrl_char_len>0) begin
+			data_mask = {128{1'b1}} >> (128-wb_trans_scb_h.ctrl_reg.ctrl_char_len);
+		end
 	
-				else begin
-					data_mask ='h FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF;
-				end
+		else begin
+			data_mask ='h FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF;
+		end
 
-	      			wb_trans_scb_h.mon_data = wb_trans_scb_h.mon_data & data_mask;
-	      			wb_trans_scb_h.mon_rx_data = wb_trans_scb_h.mon_rx_data & data_mask;
-				
-			end
-			 
+	      	wb_trans_scb_h.mon_data = wb_trans_scb_h.mon_data & data_mask;
+	      	wb_trans_scb_h.mon_rx_data = wb_trans_scb_h.mon_rx_data & data_mask;			 
+ 
 			if($test$plusargs("MSB_TEST")) begin
 				`uvm_info(get_type_name(),$sformatf("*****[%0t] spi_slave_trans_scb_h.mosi_rd_data=%h",$time,spi_slave_trans_scb_h.mosi_rd_data),UVM_MEDIUM)
 			       `uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%h",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
-		//		temp=wb_trans_scb_h.mon_rx_data;
-		//		for(int i=0; i<wb_trans_scb_h.ctrl_reg.ctrl_char_len; i++) begin
-		//			wb_trans_scb_h.mon_rx_data[i]=temp[127-i];
-		//		`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%b",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
-		//		end
-		//		`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%h",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
-				
+						
 				if(wb_trans_scb_h.ctrl_reg.ctrl_char_len>0) begin
 				data_length= {<<1{spi_slave_trans_scb_h.mosi_rd_data}};
 				$display("data_length=%0h",data_length);
