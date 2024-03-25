@@ -32,11 +32,11 @@ task lsb_8bit_data_seq ::body();
 	//	req.ctrl_reg.ctrl_char_len=128'h08; 
 		req.ctrl_reg.ctrl_res_1=1'h0;      
 		req.ctrl_reg.ctrl_go=1'h0;		
-		req.ctrl_reg.ctrl_rx_negedge=1'h0;	
-		req.ctrl_reg.ctrl_tx_negedge=1'h1;
+	//	req.ctrl_reg.ctrl_rx_negedge=1'h0;	
+	//	req.ctrl_reg.ctrl_tx_negedge=1'h1;
 		
-	//	if($value$plusargs("TX_NEG=%d ",req.ctrl_reg.ctrl_tx_negedge))
-	//	if($value$plusargs(" RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge)) 
+		if($value$plusargs("TX_NEG=%d ",req.ctrl_reg.ctrl_tx_negedge))
+		if($value$plusargs(" RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge)) 
 		
 		if($test$plusargs("MSB_TEST")) begin
 			req.ctrl_reg.ctrl_lsb=1'h0; 
@@ -104,11 +104,11 @@ task lsb_8bit_data_seq ::body();
 	//	req.ctrl_reg.ctrl_char_len=16; 
 		req.ctrl_reg.ctrl_res_1=1'h0;      
 		req.ctrl_reg.ctrl_go=1'h1;
-		req.ctrl_reg.ctrl_rx_negedge=1'h0;	
-		req.ctrl_reg.ctrl_tx_negedge=1'h1;
+	//	req.ctrl_reg.ctrl_rx_negedge=1'h0;	
+	//	req.ctrl_reg.ctrl_tx_negedge=1'h1;
 
-	//	if($value$plusargs("TX_NEG=%d ",req.ctrl_reg.ctrl_tx_negedge)) 
-	//	if($value$plusargs(" RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge)) 
+		if($value$plusargs("TX_NEG=%d ",req.ctrl_reg.ctrl_tx_negedge)) 
+		if($value$plusargs(" RX_NEG=%d",req.ctrl_reg.ctrl_rx_negedge)) 
 		
 		if($test$plusargs("MSB_TEST")) begin
 			req.ctrl_reg.ctrl_lsb=1'h0;

@@ -6,3 +6,4 @@
  `include "ss_data_test.sv"
  `include "ie_data_test.sv"
  `include "miso_data_test.sv"
+ `include "rand_data_test.sv"

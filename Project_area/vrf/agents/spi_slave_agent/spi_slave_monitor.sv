@@ -98,7 +98,7 @@ int counter=0;
 		end
         	spi_slave_trans_h.frame_size=counter;
 
-   	 `uvm_info(get_type_name(),$sformatf("=============================================SPI_SLAVE MONITOR TO SCB======================================= \n %s",spi_slave_trans_h.sprint()),UVM_MEDIUM)
+   //	 `uvm_info(get_type_name(),$sformatf("=============================================SPI_SLAVE MONITOR TO SCB======================================= \n %s",spi_slave_trans_h.sprint()),UVM_MEDIUM)
 	
 		//scoreboard write method
       		spi_slave_analysis_port.write(spi_slave_trans_h); 

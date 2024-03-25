@@ -22,9 +22,6 @@ rsp = wb_trans::type_id::create("rsp");
 
 ///*******************run phase***********************/
  virtual task run_phase(uvm_phase phase);
-//	`uvm_info("WB_DRIVER","WB_DRIVER_BEFORE_RAISE_OBJECTION ", UVM_HIGH)
-//	phase.raise_objection(this);
-// 	`uvm_info("WB_DRIVER","WB_DRIVER_AFTER_RAISE_OBJECTION ", UVM_HIGH)
 
 	wait(wb_vif.rstn==0);
   	forever

@@ -4,3 +4,4 @@
 `include "ss_data_seq.sv"
 `include "ie_data_seq.sv"
 `include "miso_data.sv"
+`include "rand_data_seq.sv"

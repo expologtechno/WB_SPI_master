@@ -39,7 +39,6 @@ uvm_tlm_analysis_fifo#(spi_slave_trans) spi_slave_analysis_fifo;
 
 /***********************************run phase*************************/
   virtual task run_phase(uvm_phase phase);
-//	phase.raise_objection(this);
     
  	`uvm_info("SPI_SCOREBOARD","SCOREBOARD Run Phase", UVM_LOW)
 	forever 
@@ -47,12 +46,14 @@ uvm_tlm_analysis_fifo#(spi_slave_trans) spi_slave_analysis_fifo;
 		fork
 			begin
 				wb_analysis_fifo.get(wb_trans_scb_h);
-     			//	`uvm_info(get_type_name(),$sformatf("=============================================WB_TRANS_MONITOR_SCBD ======================================= \n %s",wb_trans_scb_h.sprint()),UVM_MEDIUM)
+     		//		`uvm_info(get_type_name(),$sformatf("=============================================WB_TRANS_MONITOR_SCBD ======================================= \n %s",wb_trans_scb_h.sprint()),UVM_MEDIUM)
+ 	`uvm_info("SPI_SCOREBOARD","SCOREBOARD_WB_FORK_JOIN_COMPLETED", UVM_LOW)
 			end
 
 			begin
 				spi_slave_analysis_fifo.get(spi_slave_trans_scb_h);
-   				`uvm_info(get_type_name(),$sformatf("=============================================SPI_SLAVE_TRANS_MONITOR_SCBD ======================================= \n %s",spi_slave_trans_scb_h.sprint()),UVM_MEDIUM)
+   		//		`uvm_info(get_type_name(),$sformatf("=============================================SPI_SLAVE_TRANS_MONITOR_SCBD ======================================= \n %s",spi_slave_trans_scb_h.sprint()),UVM_MEDIUM)
+ 	`uvm_info("SPI_SCOREBOARD","SCOREBOARD_SPI_SLAVE_JOIN_COMPLETED", UVM_LOW)
    			end
         	join
 			if($value$plusargs("CHAR_LEN=%d",wb_trans_scb_h.ctrl_reg.ctrl_char_len)) begin
@@ -65,22 +66,16 @@ uvm_tlm_analysis_fifo#(spi_slave_trans) spi_slave_analysis_fifo;
 	
 				else begin
 					data_mask ='h FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF;
-			//	`uvm_info(get_type_name(),$sformatf("*****[%0t] data_mask=%h",$time,data_mask),UVM_MEDIUM)
 				end
 
-			//	`uvm_info(get_type_name(),$sformatf("*****[%0t]  wb_trans_scb_h.mon_data=%h",$time,wb_trans_scb_h.mon_data),UVM_MEDIUM)
-			//	`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%h",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
 	      			wb_trans_scb_h.mon_data = wb_trans_scb_h.mon_data & data_mask;
 	      			wb_trans_scb_h.mon_rx_data = wb_trans_scb_h.mon_rx_data & data_mask;
 				
-			//	`uvm_info(get_type_name(),$sformatf("*****[%0t]  wb_trans_scb_h.mon_data=%h",$time,wb_trans_scb_h.mon_data),UVM_MEDIUM)
-			//	`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%h",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
 			end
 			 
 			if($test$plusargs("MSB_TEST")) begin
-				//temp=spi_slave_trans_scb_h.mosi_rd_data;
 				`uvm_info(get_type_name(),$sformatf("*****[%0t] spi_slave_trans_scb_h.mosi_rd_data=%h",$time,spi_slave_trans_scb_h.mosi_rd_data),UVM_MEDIUM)
-		//	       `uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%h",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
+			       `uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%h",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
 		//		temp=wb_trans_scb_h.mon_rx_data;
 		//		for(int i=0; i<wb_trans_scb_h.ctrl_reg.ctrl_char_len; i++) begin
 		//			wb_trans_scb_h.mon_rx_data[i]=temp[127-i];
@@ -114,7 +109,7 @@ uvm_tlm_analysis_fifo#(spi_slave_trans) spi_slave_analysis_fifo;
 				end
 		
 			//	`uvm_info(get_type_name(),$sformatf("*****[%0t] spi_slave_trans_scb_h.mosi_rd_data=%h",$time,spi_slave_trans_scb_h.mosi_rd_data),UVM_MEDIUM)
-			//	`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%h",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
+				`uvm_info(get_type_name(),$sformatf("*****[%0t] wb_trans_scb_h.mon_rx_data=%h",$time,wb_trans_scb_h.mon_rx_data),UVM_MEDIUM)
 			end
 			
 			
@@ -139,7 +134,6 @@ uvm_tlm_analysis_fifo#(spi_slave_trans) spi_slave_analysis_fifo;
 			end
 			
   		end
-//	phase.drop_objection(this);
 
   endtask:run_phase
 
