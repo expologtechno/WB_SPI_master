@@ -30,14 +30,13 @@ rsp = wb_trans::type_id::create("rsp");
  	//	`uvm_info("WB_DRIVER","reset is high",UVM_MEDIUM)
   		// begin
      		//	@((wb_vif.clk) && !wb_vif.rstn )
-		 begin
+     			 begin
 	 		@(posedge wb_vif.clk);
 			wb_vif.wb_cyc_i = 1'h1;
 			wb_vif.wb_stb_i = 1'h1;
 			wb_vif.wb_sel_i = 4'hF;
-		
-		
-		wb_vif.wb_we_i <= wb_trans_h.wr_en;
+			
+			wb_vif.wb_we_i <= wb_trans_h.wr_en;
 
 		 if(wb_trans_h.wr_en==1) begin	           
 			wb_vif.wb_adr_i <= wb_trans_h.reg_addr;
@@ -52,6 +51,7 @@ rsp = wb_trans::type_id::create("rsp");
 			@(posedge wb_vif.clk);
 			wb_vif.wb_cyc_i <= 0;
 			wb_vif.wb_stb_i <= 0;
+			wb_vif.wb_sel_i <= 0;
 		end
 		 else
 		begin
@@ -65,6 +65,7 @@ rsp = wb_trans::type_id::create("rsp");
 	 	@(posedge wb_vif.clk);
 		wb_vif.wb_cyc_i <= 0;
 		wb_vif.wb_stb_i <= 0;
+		wb_vif.wb_sel_i <= 0;
 
     		 //end
 		 end

@@ -1,5 +1,17 @@
 class wb_trans extends uvm_sequence_item;
-  
+ 
+  rand bit              wb_rst_i;         // synchronous active high reset
+  rand bit        [4:0] wb_adr_i;         // lower address bits
+  rand bit     [32-1:0] wb_dat_i;         // databus input
+  rand bit     [32-1:0] wb_dat_o;         // databus output
+  rand bit        [3:0] wb_sel_i;         // byte select inputs
+  rand bit              wb_we_i;          // write enable input
+  rand bit              wb_stb_i;         // stobe/core select signal
+  rand bit              wb_cyc_i;         // valid bus cycle input
+  rand bit              wb_ack_o;         // bus cycle acknowledge output
+  rand bit              wb_err_o;         // termination w/ error
+  rand bit              wb_int_o;         // interrupt request signal outp
+
   rand bit[4:0]   reg_addr;           // lower address bits   // REG address
   rand bit[31:0]  reg_wr_data;        // databus input        //reg_wr_DATA(wr_data)
   logic [31:0]    reg_rd_data;        // databus input        //reg_rd_DATA(wr_data)

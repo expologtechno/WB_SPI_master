@@ -5,3 +5,4 @@
 `include "ie_data_seq.sv"
 `include "miso_data.sv"
 `include "rand_data_seq.sv"
+`include "cov_data_seq.sv"

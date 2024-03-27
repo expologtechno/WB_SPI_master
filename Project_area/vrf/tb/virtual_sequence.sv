@@ -199,4 +199,29 @@ task virt_rand_data_seq:: body();
   rand_data_seq_h=rand_data_seq::type_id::create("rand_data_seq_h");
   rand_data_seq_h.start(wb_agent_sqr_h);
  endtask 
+/**********************COVERAGE DATA SEQUENCE************************/
+/********************************************************************/
+class virt_cov_data_seq extends virtual_sequence; 
+  `uvm_object_utils(virt_cov_data_seq)
+  
+  spi_virtual_sqr v_sqr_h;
+
+  cov_data_seq  cov_data_seq_h; 
+  
+  extern function new(string name="virt_cov_data_seq");
+  extern task body();
+
+endclass
+
+/************** constructor*******************/
+function virt_cov_data_seq::new(string name="virt_cov_data_seq");
+  super.new(name);
+endfunction	
+
+/****************** body**************************/
+task virt_cov_data_seq:: body();
+  super.body();
+  cov_data_seq_h=cov_data_seq::type_id::create("cov_data_seq_h");
+  cov_data_seq_h.start(wb_agent_sqr_h);
+ endtask 
 

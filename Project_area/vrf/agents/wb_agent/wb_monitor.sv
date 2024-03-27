@@ -204,7 +204,7 @@ virtual task run_phase(uvm_phase phase);
 							wb_trans_h.mon_rx_data[127:0]={data3,data2,data1,data0};
 							{wb_trans_h.ctrl_reg.ctrl_res_2,wb_trans_h.ctrl_reg.ctrl_ass,wb_trans_h.ctrl_reg.ctrl_ie,wb_trans_h.ctrl_reg.ctrl_lsb,wb_trans_h.ctrl_reg.ctrl_tx_negedge,wb_trans_h.ctrl_reg.ctrl_rx_negedge,wb_trans_h.ctrl_reg.ctrl_go,wb_trans_h.ctrl_reg.ctrl_res_1,wb_trans_h.ctrl_reg.ctrl_char_len}=cntrl_status_reg;
 
-					//		`uvm_info(get_type_name(),$sformatf("*****[%0t] RX3_ADDR  wb_trans_h.mon_rx_data=%h ",$time,wb_trans_h.mon_rx_data[127:0]),UVM_MEDIUM)
+							`uvm_info(get_type_name(),$sformatf("*****[%0t] RX3_ADDR  wb_trans_h.mon_rx_data=%h ",$time,wb_trans_h.mon_rx_data[127:0]),UVM_MEDIUM)
 					      		wb_analysis_port.write(wb_trans_h);
 						end
 

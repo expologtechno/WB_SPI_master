@@ -1,5 +1,3 @@
-//typedef uvm_sequencer #(wb_trans) wb_seqr;
-
 class wb_agent extends uvm_agent;
 
   // UVM automation macros for general components

@@ -62,7 +62,8 @@ int counter=0;
 			$value$plusargs("TX_NEG=%0d",tx_neg_mon);
 			
 			if(rx_neg_mon==0 && tx_neg_mon==0)begin	
-				@(negedge spi_vif.spi_clk);
+			//	@(negedge spi_vif.spi_clk);
+				@(posedge spi_vif.spi_clk);
 			end
 			
 			else if(rx_neg_mon==0 && tx_neg_mon==1) begin
@@ -70,11 +71,12 @@ int counter=0;
 			end
 			
 			else if(rx_neg_mon==1 && tx_neg_mon==0) begin
-				@(negedge spi_vif.spi_clk);
+				@(posedge spi_vif.spi_clk);
 			end
 			
 			else if (rx_neg_mon==1 && tx_neg_mon==1) begin
 				@(posedge spi_vif.spi_clk);
+			//	@(negedge spi_vif.spi_clk);
 			end
       	`uvm_info(get_type_name(),$sformatf("*****[%0t]SPI_SLAVE_MONITOR********* rx_neg_mon=%0h tx_neg_mon=%0h ",$time,rx_neg_mon,tx_neg_mon),UVM_HIGH)
 			end
@@ -98,7 +100,7 @@ int counter=0;
 		end
         	spi_slave_trans_h.frame_size=counter;
 
-   //	 `uvm_info(get_type_name(),$sformatf("=============================================SPI_SLAVE MONITOR TO SCB======================================= \n %s",spi_slave_trans_h.sprint()),UVM_MEDIUM)
+   	 `uvm_info(get_type_name(),$sformatf("=============================================SPI_SLAVE MONITOR TO SCB======================================= \n %s",spi_slave_trans_h.sprint()),UVM_MEDIUM)
 	
 		//scoreboard write method
       		spi_slave_analysis_port.write(spi_slave_trans_h); 

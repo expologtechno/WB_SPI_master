@@ -24,12 +24,9 @@ task run_phase(uvm_phase phase);
 	virt_ss_data_seq_h=virt_ss_data_seq::type_id::create("virt_ss_data_seq_h");
 	virt_miso_data_seq_h=virt_miso_data_seq::type_id::create("virt_miso_data_seq_h");
 
-//spi_environment_h.spi_v_seqr_h.set_arbitration(UVM_SEQ_ARB_FIFO);
-//show_arb_cfg();
 
 fork
 //	v_rst_sq.start(spi_environment_h.spi_v_seqr_h);
-//	virt_sanity_seq_h.start(spi_environment_h.spi_v_seqr_h);
 	virt_ss_data_seq_h.start(spi_environment_h.spi_v_seqr_h);
 	virt_miso_data_seq_h.start(spi_environment_h.spi_v_seqr_h);
 

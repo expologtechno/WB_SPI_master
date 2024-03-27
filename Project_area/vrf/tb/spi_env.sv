@@ -5,7 +5,7 @@ class spi_environment extends uvm_env;
   //agents
   wb_agent           wb_agent_h;
   spi_slave_agent    spi_slave_agent_h;
-//  reset_agent        reset_agent_h;
+  reset_agent        reset_agent_h;
   
   spi_sbd            spi_scbd_h;
   spi_virtual_sqr    spi_v_seqr_h;
@@ -22,7 +22,7 @@ class spi_environment extends uvm_env;
     super.build_phase(phase);
     wb_agent_h        = wb_agent::type_id::create("wb_agent_h",this);
     spi_slave_agent_h = spi_slave_agent::type_id::create("spi_slave_agent_h",this);
- //   reset_agent_h     = reset_agent::type_id::create("reset_agent_h",this);
+    reset_agent_h     = reset_agent::type_id::create("reset_agent_h",this);
 
     spi_scbd_h        = spi_sbd::type_id::create("spi_scbd_h",this);
     spi_v_seqr_h      = spi_virtual_sqr::type_id::create("spi_v_seqr_h",this);
@@ -36,7 +36,7 @@ class spi_environment extends uvm_env;
 
     spi_v_seqr_h.wb_agent_sqr_h        = wb_agent_h.wb_seqr_h;
     spi_v_seqr_h.spi_slave_agent_sqr_h = spi_slave_agent_h.spi_slave_sqr_h;
- //   spi_v_seqr_h.reset_agent_sqr_h     = reset_agent_h.reset_agent_sqr_h;
+    spi_v_seqr_h.reset_agent_sqr_h     = reset_agent_h.reset_agent_sqr_h;
 
     wb_agent_h.wb_monitor_h.wb_analysis_port.connect(spi_scbd_h.wb_analysis_fifo.analysis_export);
     spi_slave_agent_h.spi_slave_mon_h.spi_slave_analysis_port.connect(spi_scbd_h.spi_slave_analysis_fifo.analysis_export);

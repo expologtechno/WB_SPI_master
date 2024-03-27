@@ -21,16 +21,17 @@ task ss_data_seq ::body();
 
 /******************************************************Divider register****************************************************/
   		start_item(req);
-		assert(req.randomize()with{req.reg_addr==`DIVIDER_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'h 00000001;});
+		assert(req.randomize()with{req.reg_addr==`DIVIDER_ADDR;req.wr_en==1'h1;});
+		if($value$plusargs("DIV_REG=%d",req.reg_wr_data)) 
 	        finish_item(req);
    get_response(rsp);
-
 
 /**********************************************Control_status reg************************************************/
  		start_item(req);
 		assert(req.randomize()with{req.reg_addr==`CTRL_STATUS_ADDR ;req.wr_en==1'h1;});
 		if($value$plusargs("CHAR_LEN=%d",req.ctrl_reg.ctrl_char_len))
 	//	req.ctrl_reg.ctrl_char_len=128'h08; 
+		`uvm_info(get_type_name(),$sformatf("*****[%0t] req.ctrl_reg.ctrl_char_len=%d",$time,req.ctrl_reg.ctrl_char_len),UVM_MEDIUM)
 		req.ctrl_reg.ctrl_res_1=1'h0;      
 		req.ctrl_reg.ctrl_go=1'h0;		
 	//	req.ctrl_reg.ctrl_rx_negedge=1'h0;	
@@ -46,7 +47,6 @@ task ss_data_seq ::body();
 			req.ctrl_reg.ctrl_lsb=1'h1;
 		end
 
-		req.ctrl_reg.ctrl_lsb=1'h1;	       
 		req.ctrl_reg.ctrl_ie=1'h0;		  
 		req.ctrl_reg.ctrl_ass=1'h0;	        
 		req.ctrl_reg.ctrl_res_2=32'h00_0000;
@@ -57,6 +57,13 @@ task ss_data_seq ::body();
 				
 		finish_item(req);
    		get_response(rsp);
+/******************************Slave Select reg*****************************************************************************/
+  		start_item(req);
+		assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;});
+		if($value$plusargs("SS_WR_DATA=%d",req.reg_wr_data))
+		//assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'h 00000001;});
+		finish_item(req);
+  		get_response(rsp);
 
 /*******************************************************Data_Tx reg 1 *****************************************1************/
 //*************1*************
@@ -87,19 +94,19 @@ task ss_data_seq ::body();
 		finish_item(req);
  		get_response(rsp);
 /******************************Slave Select reg*****************************************************************************/
-  		start_item(req);
-	//	assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;});
-	//	$value$plusargs("SS_WR_DATA=%d",req.reg_wr_data);
-		assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'h 00000000;});
-		finish_item(req);
-  		get_response(rsp);
-/******************************Slave Select reg*****************************************************************************/
-  		start_item(req);
-	//	assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;});
-	//	$value$plusargs("SS_WR_DATA=%d",req.reg_wr_data);
-		assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'h 00000001;});
-		finish_item(req);
-  		get_response(rsp);
+  //		start_item(req);
+  //      //	assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;});
+  //      //	$value$plusargs("SS_WR_DATA=%d",req.reg_wr_data);
+  //      	assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'h 00000000;});
+  //      	finish_item(req);
+  //		get_response(rsp);
+/*//*****************************Slave Select reg*****************************************************************************/
+  //		start_item(req);
+  //      //	assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;});
+  //      //	$value$plusargs("SS_WR_DATA=%d",req.reg_wr_data);
+  //      	assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'h 00000001;});
+  //      	finish_item(req);
+  //		get_response(rsp);
 
 /**********************************************Control_status reg************************************************/
  		start_item(req);
@@ -150,6 +157,11 @@ task ss_data_seq ::body();
 		assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'h 00000000;});
 		finish_item(req);
   		get_response(rsp);
+/******************************************************Divider register****************************************************/
+  		start_item(req);
+		assert(req.randomize()with{req.reg_addr==`DIVIDER_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'h 00000000;});
+	        finish_item(req);
+   get_response(rsp);
 
 
 /*******************************************************Data_Dx reg 1 *****************************************1**********/
@@ -174,6 +186,33 @@ task ss_data_seq ::body();
 		finish_item(req);
  		get_response(rsp);
 /************************************************************************************************************************/
+/******************************Slave Select reg*****************************************************************************/
+  		start_item(req);
+		assert(req.randomize()with{req.reg_addr==`SS_ADDR;req.wr_en==1'h1;req.reg_wr_data==32'h 00000000;});
+		finish_item(req);
+  		get_response(rsp);
+
+/**********************************************Control_status reg************************************************/
+ 		start_item(req);
+		assert(req.randomize()with{req.reg_addr==`CTRL_STATUS_ADDR ;req.wr_en==1'h1;});
+
+		req.ctrl_reg.ctrl_char_len=1; 
+		req.ctrl_reg.ctrl_res_1=1'h0;      
+		req.ctrl_reg.ctrl_go=1'h0;		
+		req.ctrl_reg.ctrl_rx_negedge=1'h0;	
+		req.ctrl_reg.ctrl_tx_negedge=1'h0;
+		req.ctrl_reg.ctrl_lsb=1'h0;
+		req.ctrl_reg.ctrl_lsb=1'h0;
+		req.ctrl_reg.ctrl_ie=1'h0;		  
+		req.ctrl_reg.ctrl_ass=1'h0;	        
+		req.ctrl_reg.ctrl_res_2=32'h00_0000;
+ 
+		ctrl={req.ctrl_reg.ctrl_res_2,req.ctrl_reg.ctrl_ass,req.ctrl_reg.ctrl_ie,req.ctrl_reg.ctrl_lsb,req.ctrl_reg.ctrl_tx_negedge,req.ctrl_reg.ctrl_rx_negedge,req.ctrl_reg.ctrl_go,req.ctrl_reg.ctrl_res_1,req.ctrl_reg.ctrl_char_len};
+
+		req.reg_wr_data=ctrl;    //LSB first data
+				
+		finish_item(req);
+   		get_response(rsp);
+
 	end
 endtask
-

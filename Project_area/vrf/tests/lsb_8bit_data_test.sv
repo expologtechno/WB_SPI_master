@@ -7,6 +7,8 @@ class lsb_8bit_data_test extends spi_base_test;
 	virt_lsb_8bit_data_seq   virt_lsb_8bit_data_seq_h;
 	virt_sanity_seq          virt_sanity_seq_h;
      	virt_miso_data_seq       virt_miso_data_seq_h;
+     	virt_rand_data_seq       virt_rand_data_seq_h;
+     	virt_cov_data_seq        virt_cov_data_seq_h;
 
 //----------------------constructor------------------------------------------
 function new(string name="lsb_8bit_data_test",uvm_component parent);
@@ -27,9 +29,9 @@ task run_phase(uvm_phase phase);
 	virt_sanity_seq_h=virt_sanity_seq::type_id::create("virt_sanity_seq_h");
 	virt_lsb_8bit_data_seq_h=virt_lsb_8bit_data_seq::type_id::create("virt_lsb_8bit_data_seq_h");
 	virt_miso_data_seq_h=virt_miso_data_seq::type_id::create("virt_miso_data_seq_h");
+	virt_rand_data_seq_h=virt_rand_data_seq::type_id::create("virt_rand_data_seq_h");
+	virt_cov_data_seq_h=virt_cov_data_seq::type_id::create("virt_cov_data_seq_h");
 
-//spi_environment_h.spi_v_seqr_h.set_arbitration(UVM_SEQ_ARB_FIFO);
-//show_arb_cfg();
 
 fork
 //	v_rst_sq.start(spi_environment_h.spi_v_seqr_h);

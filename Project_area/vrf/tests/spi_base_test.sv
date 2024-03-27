@@ -1,9 +1,16 @@
 class spi_base_test extends uvm_test;
 
   spi_environment      spi_environment_h; 
-  spi_virtual_sqr      spi_virtual_sqr_h;
 
-  virtual_sequence     virtual_sequence_h;
+//reset_seq	     seq0;
+//lsb_8bit_data_seq    seq1;
+//ie_data_seq	     seq2;
+//ss_data_seq	     seq3;
+//rand_data_seq	     seq4;
+
+//virtual interface
+  virtual wb_intf       wb_vif;
+  virtual spi_intf      spi_vif;
 
   `uvm_component_utils(spi_base_test)
 
@@ -15,30 +22,42 @@ class spi_base_test extends uvm_test;
     super.build_phase(phase);
 
     spi_environment_h = spi_environment::type_id::create("spi_environment_h", this);
-    virtual_sequence_h = virtual_sequence::type_id::create("virtual_sequence_h", this);
+ 
+if (!uvm_config_db#(virtual wb_intf)::get(this,"*","wb_vif",wb_vif))
+      `uvm_fatal("RESET_DRV WB","**** Could not get virtual WB interface ****");
+ if (!uvm_config_db#(virtual spi_intf)::get(this,"*","spi_vif",spi_vif))
+      `uvm_fatal("RESET_DRV SPI","**** Could not get virtual SPI interface ****");
+ 
+uvm_config_db#(virtual wb_intf)::set(this,"*","wb_vif",wb_vif);
+uvm_config_db#(virtual spi_intf)::set(this,"*","spi_vif",spi_vif);
 
   endfunction:build_phase
 
 /**************************run_phase**************************************/
   task run_phase (uvm_phase phase);
-        `uvm_info(get_name(), "run_phase", UVM_HIGH)
-
-   	`uvm_info("SPI_BASE_TEST","SPI_BASE_TEST_BEFORE_RAISE_OBJECTION ", UVM_MEDIUM)
-         phase.raise_objection(this);
-  	`uvm_info("SPI_BASE_TEST","SPI_BASE_TEST_AFTER_RAISE_OBJECTION ", UVM_MEDIUM)
-
-      	// virtual_sequence_h.start(spi_environment_h.spi_v_seqr_h);
-	// phase.phase_done.set_drain_time(this, 500ns);
-	`uvm_info("SPI_BASE_TEST","SPI_BASE_TEST_BEFORE_DROP_OBJECTION ", UVM_MEDIUM)
-	 phase.drop_objection(this);
-  	`uvm_info("SPI_BASE_TEST","SPI_BASE_TEST_AFTER_DROP_OBJECTION ", UVM_MEDIUM)
-
+  super.run_phase(phase);
+  phase.raise_objection(this);
+//  cfg_arb_mode();
+//    `uvm_info(get_name, $sformatf("Arbitration mode = %s", spi_environment_h.spi_v_seqr_h.get_arbitration()), UVM_LOW);
+//	seq0=reset_seq::type_id::create("reset_seq");
+//	seq1=lsb_8bit_data_seq::type_id::create("lsb_8bit_data_seq");
+//	seq2=ie_data_seq::type_id::create("ie_data_seq");
+//	seq3=ss_data_seq::type_id::create("ss_data_seq");
+//	seq4=rand_data_seq::type_id::create("rand_data_seq");
+//
+//  fork
+//  	seq0.start(spi_environment_h.spi_v_seqr_h.sequencer);
+//  	seq1.start(spi_environment_h.spi_v_seqr_h.sequencer);
+//  	seq2.start(spi_environment_h.spi_v_seqr_h.sequencer);
+//  	seq3.start(spi_environment_h.spi_v_seqr_h.sequencer);
+//  	seq4.start(spi_environment_h.spi_v_seqr_h.sequencer);
+//
+//
+//Join
+  phase.drop_objection(this);
   endtask
-
-/******************************check phase********************************/  
- 
- function void check_phase(uvm_phase phase);
-   `uvm_info("get_type_name", $sformatf("check_phase of %s", get_name()), UVM_MEDIUM)
- endfunction: check_phase
-
+//-------------------end_of_elaboration---------------------------
+function void end_of_elaboration_phase(uvm_phase phase);
+  uvm_top.print_topology();
+endfunction
 endclass:spi_base_test

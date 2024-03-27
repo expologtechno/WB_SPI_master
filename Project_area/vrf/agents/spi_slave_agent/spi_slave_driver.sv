@@ -53,6 +53,7 @@ task run_phase(uvm_phase phase);
 						
 						if(rx_neg==0 && tx_neg==0)begin	
 							@(negedge spi_vif.spi_clk);
+						//	@(posedge spi_vif.spi_clk);
 						end
 				
 						else if(rx_neg==0 && tx_neg==1) begin
@@ -60,11 +61,12 @@ task run_phase(uvm_phase phase);
 						end
 					
 						else if(rx_neg==1 && tx_neg==0) begin
-							@(posedge spi_vif.spi_clk);
+							@(negedge spi_vif.spi_clk);
 						end
 					
 						else if (rx_neg==1 && tx_neg==1) begin
-							@(posedge spi_vif.spi_clk);
+						//	@(posedge spi_vif.spi_clk);
+							@(negedge spi_vif.spi_clk);
 						end 
       						`uvm_info(get_type_name(),$sformatf("*****[%0t]SPI_SLAVE_DRIVER********* rx_neg=%0h tx_neg=%0h ",$time,rx_neg,tx_neg),UVM_HIGH)
 					end
