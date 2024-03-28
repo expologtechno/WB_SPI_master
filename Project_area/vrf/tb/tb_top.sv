@@ -10,7 +10,7 @@
 module tb_top;
 
   //Rst and clock declarations
-  reg clk, rstn;
+  reg clk, rstn,clk_within_tolerance,clk_outof_tolerance;
   bit [31:0] divider;
 
   //Interface instantation
@@ -20,16 +20,21 @@ module tb_top;
   //Rst and Clock generation
   initial begin
     clk = 0;
+    clk_within_tolerance = 0;
+    clk_outof_tolerance = 0;
     rstn= 1;
+  #15  rstn= 0;
+  #15  rstn= 1;
   #50 rstn=~rstn;
-  end
+   end
   always #5 clk = ~clk;
+  always #5.4 clk_within_tolerance = ~clk_within_tolerance;
+  always #5.6 clk_outof_tolerance = ~clk_outof_tolerance;
      
   //DUT Instantiation
   spi_top dut( .wb_clk_i        (wb_vif.clk),
                .wb_rst_i        (wb_vif.rstn),
                
-	        
                // Wishbone signals
                .wb_adr_i   (wb_vif.wb_adr_i),
                .wb_dat_i   (wb_vif.wb_dat_i),
@@ -62,10 +67,14 @@ module tb_top;
     run_test();
   end
 
+//initial begin
+//$assertoff freq_chk_tol;
+//end
 
-/*  initial begin
+
+  initial begin
     #10000;
     $finish;
   end
-*/
+
 endmodule:tb_top

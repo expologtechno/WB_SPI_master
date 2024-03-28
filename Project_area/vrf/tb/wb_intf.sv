@@ -1,5 +1,5 @@
 
-interface wb_intf(input logic clk,rstn);
+interface wb_intf(input logic clk,rstn,clk_within_tolerance,clk_outof_tolerance);
 
 	//RESET
 //	logic                    rstn;
@@ -20,7 +20,7 @@ interface wb_intf(input logic clk,rstn);
 //=====================================================================
 //wishbone driver clocking block
 //=====================================================================
-clocking wb_cb@(posedge clk,rstn);
+clocking wb_cb@(posedge clk,rstn,clk_within_tolerance,clk_outof_tolerance);
     	default input #1 output #1;
         
          output                 clk;         // master clock input
@@ -83,6 +83,32 @@ time clk_period =10ns;
 ASSERT_PERIOD:assert property (@(posedge clk)clk_frq_check(clk_period))
 else
 `uvm_error("TB_CLOCK_CHECK_ASSERTION", "TB clk frquency mismatch ")
+
+//******within tolerance Clock frequency check assertion**********
+
+time clk_period_within=10ns; 
+property freq_chk_within_tol ( real tolerance=10.00);
+  time current_time; 
+  ('1, current_time = $time) |=> 
+   ( (($time - current_time) >= ( (clk_period_within * (1 - (tolerance/100.00) )) - 1)) && 
+     (($time - current_time) <= ( (clk_period_within * (1 + (tolerance/100.00) )) + 1)) );
+endproperty : freq_chk_within_tol
+ASSERT_WITHIN_TOLERANCE_PERIOD:assert property (@(posedge clk_within_tolerance)freq_chk_within_tol(clk_period_within))
+else
+`uvm_error("WITHIN_TOLERANCE_CLOCK_CHECK_ASSERTION", "WITHIN_TOLERANCE_CLOCK_FREQUENCE_MISMATCH")
+
+//******outoff tolerance Clock frequency check assertion**********
+
+time clk_period_outof=10ns; 
+property freq_chk_outof_tol ( real tolerance=10.00);
+  time current_time; 
+  ('1, current_time = $time) |=> 
+   ( (($time - current_time) >= ( (clk_period_outof * (1 - (tolerance/100.00) )) - 1)) && 
+     (($time - current_time) <= ( (clk_period_outof * (1 + (tolerance/100.00) )) + 1)) );
+endproperty : freq_chk_outof_tol
+ASSERT_OUTOF_TOLERANCE_PERIOD:assert property (@(posedge clk_outof_tolerance)freq_chk_outof_tol(clk_period_outof))
+else
+`uvm_error("OUTOF_TOLERANCE_CLOCK_CHECK_ASSERTION", "OUTOF_TOLERANCE_CLOCK_FREQUENCE_MISMATCH")
 
 
 //   property sclk_frq_check;
